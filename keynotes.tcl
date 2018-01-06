@@ -48,7 +48,7 @@ proc Keynotes::create { scrolledwindow } {
 proc Keynotes::setupBinds { onopen onedit onpopup } {
   variable tree
   # hacer que redactar sea presionando por un rato
-  $tree bindText <1> $onopen
+  #$tree bindText <1> $onopen
   $tree bindText <Double-1> $onedit
   $tree bindImage <1> $onpopup
 }
@@ -137,8 +137,8 @@ proc Keynotes::begin'create { } {
     -data [array get data] \
     -image [Bitmap::get oplink]
 
-  $tree opentree $data(parent) 0
-  $tree edit $data(id) "" [list Keynotes::create'node [array get data]] 1
+  $tree opentree $data(parent) false
+  $tree edit $data(id) "..." [list Keynotes::create'node [array get data]] 1
 }
 
 proc Keynotes::open'leaf { id } {
@@ -162,16 +162,15 @@ proc Keynotes::begin'edit { node } {
 proc Keynotes::finish'edit { node newText } {
   variable tree
   $tree itemconfigure $node -text "..."
-  array set event {
-    query update
-    module Keynotes
-    from Keynotes
-  }
-  set event(id) $node
-  set event(idkey) id
-  set event(key) description
-  set event(value) $newText
-  chan puts $MAIN::chan [array get event]
+  set event [dict create \
+    query [json::write string update] \
+    module [json::write string Keynotes] \
+    id [json::write string $node] \
+    idkey [json::write string id] \
+    key [json::write string description] \
+    value [json::write string $newText] \
+  ]
+  chan puts $MAIN::chan [json::write object {*}$event]
   return 1
 }
 

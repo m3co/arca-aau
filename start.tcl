@@ -10,10 +10,6 @@ source [file join [file dirname [info script]] "m3co/main.tcl"]
 #  leftPanel - el frame izquierdo
 #  centerPanel - el frame del centro
 #
-# Procedimientos
-#  handle'event
-#
-
 namespace eval MAIN {
   connect [namespace current]
   wm title . "La tienda -"
