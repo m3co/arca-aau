@@ -167,8 +167,8 @@ proc Keynotes::finish'edit { node newText } {
     module [json::write string Keynotes] \
     id [json::write string $node] \
     idkey [json::write string id] \
-    key [json::write string description] \
-    value [json::write string $newText] \
+    key [json::write array [json::write string description]] \
+    value [json::write array [json::write string $newText]] \
   ]
   chan puts $MAIN::chan [json::write object {*}$event]
   return 1
@@ -180,8 +180,9 @@ proc Keynotes::'do'update { resp } {
   if [$tree exists $response(id)] {
     array set entry [deserialize [lindex \
       [$tree itemconfigure $response(id) -data] 4]]
-    set entry($response(key)) $response(value)
-    $tree itemconfigure $response(id) -text "$response(id) $response(value)" \
+    set entry($response(key)) [lindex $response(value) 0]
+    $tree itemconfigure $response(id) \
+      -text "$response(id) [lindex $response(value) 0]" \
       -data [array get entry]
   }
 }
