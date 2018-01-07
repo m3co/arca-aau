@@ -85,14 +85,13 @@ proc Keynotes::delete'node { } {
   variable lastPopupId
 
   $tree itemconfigure $lastPopupId -text "..."
-  array set event {
-    query delete
-    module Keynotes
-    from Keynotes
-    idKey id
-  }
-  set event(id) $lastPopupId
-  chan puts $MAIN::chan [array get event]
+  set event [dict create \
+    query [json::write string delete] \
+    module [json::write string Keynotes] \
+    idKey [json::write string id] \
+    id [json::write string $lastPopupId] \
+  ]
+  chan puts $MAIN::chan [json::write object {*}$event]
 }
 
 proc Keynotes::create'node { data input } {
@@ -105,13 +104,16 @@ proc Keynotes::create'node { data input } {
   if { $input == "" } {
     $tree delete $entry(id)
   } else {
-    array set event {
-      query insert
-      module Keynotes
-      from Keynotes
-    }
-    set event(row) [array get entry]
-    chan puts $MAIN::chan [array get event]
+    set event [dict create \
+      query [json::write string insert] \
+      module [json::write string Keynotes] \
+      row [json::write object \
+        id [json::write string $entry(id)] \
+        description [json::write string $entry(description)] \
+        parent [json::write string $entry(parent)] \
+      ] \
+    ]
+    chan puts $MAIN::chan [json::write object {*}$event]
   }
   return 1
 }
