@@ -204,7 +204,7 @@ proc Keynotes::'do'select { resp } {
     return
   }
   set root root
-  if { $entry(parent) != "" } {
+  if { $entry(parent) != "null" } {
     set root $entry(parent)
   }
   set drawcross auto
