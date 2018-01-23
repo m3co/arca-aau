@@ -180,6 +180,9 @@ proc APU::finish'edit { node newText } {
 proc APU::'do'update { resp } {
   variable tree
   upvar $resp response
+  if { [string range $response(id) 0 0] != "-" } {
+    return
+  }
   if [$tree exists $response(id)] {
     array set entry [deserialize [lindex \
       [$tree itemconfigure $response(id) -data] 4]]
@@ -193,6 +196,9 @@ proc APU::'do'update { resp } {
 proc APU::'do'delete { resp } {
   variable tree
   upvar $resp response
+  if { [string range $response(id) 0 0] != "-" } {
+    return
+  }
   if [$tree exists $response(id)] {
     $tree delete $response(id)
   }
@@ -203,6 +209,9 @@ proc APU::'do'select { resp } {
   variable tree
   upvar $resp response
   array set entry [deserialize $response(row)]
+  if { [string range $entry(id) 0 0] != "-" } {
+    return
+  }
   if [$tree exists $entry(id)] {
     $tree itemconfigure $entry(id) -data $response(row)
     return
@@ -227,6 +236,9 @@ proc APU::'do'insert { resp } {
   variable tree
   upvar $resp response
   array set entry [deserialize $response(row)]
+  if { [string range $entry(id) 0 0] != "-" } {
+    return
+  }
   if [$tree exists $entry(id)] {
     $tree itemconfigure $entry(id) -text "$entry(id) $entry(description)" \
       -data $response(row) -image [Bitmap::get oplink]
