@@ -116,7 +116,12 @@ namespace eval viewAPUSupplies {
   proc 'do'select { resp } {
     variable description
     upvar $resp response
+
     array set row [deserialize $response(row)]
+    if { [string range $row(id) 0 0] != "-" } {
+      return
+    }
+
     variable frame
 
     set keynote_frame $frame.[regsub -all {[.]} $row(APU_id) "_"]
