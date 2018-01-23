@@ -32,6 +32,18 @@ namespace eval MAIN {
       query [json::write string subscribe] \
     ]
     chan puts $chan [json::write object {*}$event]
+
+    set event [dict create \
+      module [json::write string viewAPUSupplies] \
+      query [json::write string subscribe] \
+    ]
+    chan puts $chan [json::write object {*}$event]
+
+    set event [dict create \
+      module [json::write string Supplies] \
+      query [json::write string subscribe] \
+    ]
+    chan puts $chan [json::write object {*}$event]
   }
   subscribe
 }
@@ -43,6 +55,7 @@ proc MAIN::setupLayout { } {
 }
 
 source [file join [file dirname [info script]] APU.tcl]
+source [file join [file dirname [info script]] viewAPUSupplies/viewAPUSupplies.tcl]
 APU::create $MAIN::scrolledwindow
 MAIN::setupLayout
 APU::setupBinds APU::open APU::begin'edit \

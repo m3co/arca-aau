@@ -49,7 +49,8 @@ proc APU::setupBinds { onopen onedit onpopup } {
   variable tree
   # hacer que redactar sea presionando por un rato
   #$tree bindText <1> $onopen
-  $tree bindText <Double-1> $onedit
+  #$tree bindText <Double-1> $onedit
+  $tree bindText <1> [list viewAPUSupplies::open'view .centerpanel]
   $tree bindImage <1> $onpopup
 }
 
