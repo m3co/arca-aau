@@ -31,6 +31,8 @@ namespace eval APU {
   $popupmenu add command -label "Agregar" -command APU::begin'create
   $popupmenu add separator
   $popupmenu add command -label "Eliminar" -command APU::delete'node
+  $popupmenu add separator
+  $popupmenu add command -label "Renombrar" -command APU::begin'edit
 
   set event [dict create \
     query [json::write string select] \
@@ -155,11 +157,13 @@ proc APU::open'leaf { id } {
   chan puts $MAIN::chan [json::write object {*}$event]
 }
 
-proc APU::begin'edit { node } {
+proc APU::begin'edit { } {
   variable tree
-  array set entry [deserialize [$tree itemcget $node -data]]
-  $tree edit $node [lindex [array get entry description] 1] \
-    [list APU::finish'edit $node] 1
+  variable lastPopupId
+
+  array set entry [deserialize [$tree itemcget $lastPopupId -data]]
+  $tree edit $lastPopupId [lindex [array get entry description] 1] \
+    [list APU::finish'edit $lastPopupId] 1
 }
 
 proc APU::finish'edit { node newText } {
