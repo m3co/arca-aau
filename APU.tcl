@@ -1,5 +1,5 @@
 #
-# Administrador de Keynotes en forma de arbol
+# Administrador de APU en forma de arbol
 #
 # Variables
 #   popupmenu - el menu que se despliega al dar click sobre la imagen
@@ -24,28 +24,28 @@
 #   'do'update
 #   'do'insert
 #
-namespace eval Keynotes {
+namespace eval APU {
   set popupmenu [menu .popupmenu -tearoff false]
   set lastPopupId {}
 
-  $popupmenu add command -label "Agregar" -command Keynotes::begin'create
+  $popupmenu add command -label "Agregar" -command APU::begin'create
   $popupmenu add separator
-  $popupmenu add command -label "Eliminar" -command Keynotes::delete'node
+  $popupmenu add command -label "Eliminar" -command APU::delete'node
 
   set event [dict create \
     query [json::write string select] \
-    module [json::write string Keynotes] \
-    parent [json::write string "-"] \
+    module [json::write string APU] \
+    parent null \
   ]
   chan puts $MAIN::chan [json::write object {*}$event]
 }
 
-proc Keynotes::create { scrolledwindow } {
-  variable tree [Tree [$scrolledwindow getframe].tree -opencmd Keynotes::open'leaf \
+proc APU::create { scrolledwindow } {
+  variable tree [Tree [$scrolledwindow getframe].tree -opencmd APU::open'leaf \
     -showlines true -deltay 18 -bd 0]
 }
 
-proc Keynotes::setupBinds { onopen onedit onpopup } {
+proc APU::setupBinds { onopen onedit onpopup } {
   variable tree
   # hacer que redactar sea presionando por un rato
   #$tree bindText <1> $onopen
@@ -67,7 +67,7 @@ proc Keynotes::setupBinds { onopen onedit onpopup } {
 # Modifica la variable
 #   lastPopupId - guarda $entry
 #
-proc Keynotes::open'popupmenu { x y entry } {
+proc APU::open'popupmenu { x y entry } {
   variable popupmenu
   variable tree
   variable lastPopupId $entry
@@ -80,21 +80,21 @@ proc Keynotes::open'popupmenu { x y entry } {
   tk_popup $popupmenu $x $y
 }
 
-proc Keynotes::delete'node { } {
+proc APU::delete'node { } {
   variable tree
   variable lastPopupId
 
   $tree itemconfigure $lastPopupId -text "..."
   set event [dict create \
     query [json::write string delete] \
-    module [json::write string Keynotes] \
-    idKey [json::write string id] \
+    module [json::write string APU] \
+    idkey [json::write string id] \
     id [json::write string $lastPopupId] \
   ]
   chan puts $MAIN::chan [json::write object {*}$event]
 }
 
-proc Keynotes::create'node { data input } {
+proc APU::create'node { data input } {
   variable tree
   array set entry [deserialize $data]
 
@@ -106,7 +106,7 @@ proc Keynotes::create'node { data input } {
   } else {
     set event [dict create \
       query [json::write string insert] \
-      module [json::write string Keynotes] \
+      module [json::write string APU] \
       row [json::write object \
         id [json::write string $entry(id)] \
         description [json::write string $entry(description)] \
@@ -118,7 +118,7 @@ proc Keynotes::create'node { data input } {
   return 1
 }
 
-proc Keynotes::begin'create { } {
+proc APU::begin'create { } {
   variable tree
   variable lastPopupId
 
@@ -140,33 +140,33 @@ proc Keynotes::begin'create { } {
     -image [Bitmap::get oplink]
 
   $tree opentree $data(parent) false
-  $tree edit $data(id) "..." [list Keynotes::create'node [array get data]] 1
+  $tree edit $data(id) "..." [list APU::create'node [array get data]] 1
 }
 
-proc Keynotes::open'leaf { id } {
+proc APU::open'leaf { id } {
   variable tree
   set event [dict create \
     query [json::write string select] \
-    module [json::write string Keynotes] \
-    from [json::write string Keynotes] \
+    module [json::write string APU] \
+    from [json::write string APU] \
     parent [json::write string $id] \
   ]
   chan puts $MAIN::chan [json::write object {*}$event]
 }
 
-proc Keynotes::begin'edit { node } {
+proc APU::begin'edit { node } {
   variable tree
   array set entry [deserialize [$tree itemcget $node -data]]
   $tree edit $node [lindex [array get entry description] 1] \
-    [list Keynotes::finish'edit $node] 1
+    [list APU::finish'edit $node] 1
 }
 
-proc Keynotes::finish'edit { node newText } {
+proc APU::finish'edit { node newText } {
   variable tree
   $tree itemconfigure $node -text "..."
   set event [dict create \
     query [json::write string update] \
-    module [json::write string Keynotes] \
+    module [json::write string APU] \
     id [json::write string $node] \
     idkey [json::write string id] \
     key [json::write array [json::write string description]] \
@@ -176,7 +176,7 @@ proc Keynotes::finish'edit { node newText } {
   return 1
 }
 
-proc Keynotes::'do'update { resp } {
+proc APU::'do'update { resp } {
   variable tree
   upvar $resp response
   if [$tree exists $response(id)] {
@@ -189,7 +189,7 @@ proc Keynotes::'do'update { resp } {
   }
 }
 
-proc Keynotes::'do'delete { resp } {
+proc APU::'do'delete { resp } {
   variable tree
   upvar $resp response
   if [$tree exists $response(id)] {
@@ -198,7 +198,7 @@ proc Keynotes::'do'delete { resp } {
 
 }
 
-proc Keynotes::'do'select { resp } {
+proc APU::'do'select { resp } {
   variable tree
   upvar $resp response
   array set entry [deserialize $response(row)]
@@ -222,7 +222,7 @@ proc Keynotes::'do'select { resp } {
   }
 }
 
-proc Keynotes::'do'insert { resp } {
+proc APU::'do'insert { resp } {
   variable tree
   upvar $resp response
   array set entry [deserialize $response(row)]

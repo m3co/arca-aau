@@ -28,7 +28,7 @@ namespace eval MAIN {
   proc subscribe { } {
     variable chan
     set event [dict create \
-      module [json::write string Keynotes] \
+      module [json::write string APU] \
       query [json::write string subscribe] \
     ]
     chan puts $chan [json::write object {*}$event]
@@ -38,12 +38,12 @@ namespace eval MAIN {
 
 proc MAIN::setupLayout { } {
   variable scrolledwindow
-  $scrolledwindow setwidget $Keynotes::tree
+  $scrolledwindow setwidget $APU::tree
   update                ;# Process all UI events before moving on.
 }
 
-source [file join [file dirname [info script]] keynotes.tcl]
-Keynotes::create $MAIN::scrolledwindow
+source [file join [file dirname [info script]] APU.tcl]
+APU::create $MAIN::scrolledwindow
 MAIN::setupLayout
-Keynotes::setupBinds APU::open Keynotes::begin'edit \
-  [list Keynotes::open'popupmenu %X %Y]
+APU::setupBinds APU::open APU::begin'edit \
+  [list APU::open'popupmenu %X %Y]
