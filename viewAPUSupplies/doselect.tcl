@@ -123,6 +123,9 @@ namespace eval viewAPUSupplies {
     }
 
     variable frame
+    if { [info exists frame] != 1 } {
+      return
+    }
 
     set keynote_frame $frame.[regsub -all {[.]} $row(APU_id) "_"]
     if { [winfo exists $keynote_frame] == 0 } {

@@ -65,6 +65,9 @@ namespace eval viewAPUSupplies {
     upvar $resp response
     array set row [deserialize $response(row)]
     variable frame
+    if { [info exists frame] != 1 } {
+      return
+    }
 
     set keynote_frame $frame.[regsub -all {[.]} $row(APU_id) "_"]
     set apu_frame $keynote_frame.apu_[regsub -all {[.]} $row(APU_id) "_"]
