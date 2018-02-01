@@ -17,7 +17,7 @@ namespace eval MAIN {
 
   set leftPanel [frame .leftpanel]
   set centerPanel [frame .centerpanel]
-  pack $leftPanel -fill y -side left
+  pack $leftPanel -fill both -side left -expand true
   pack $centerPanel -fill both -side left -expand true
 
   set scrolledwindow [ScrolledWindow $leftPanel.scrolledWindow \
