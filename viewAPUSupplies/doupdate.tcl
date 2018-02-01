@@ -68,21 +68,9 @@ namespace eval viewAPUSupplies {
         ]
         labelentry::setup [array get conf] [array get row] [array get description]
 
-        array set conf [list \
-          from viewAPUSupplies \
-          module viewAPUSupplies \
-          idkey id \
-          key Qtakeoff_qop \
-          frame $apu_frame.extras.qtakeoff_qop \
-          dollar false \
-          currency false \
-        ]
-        labelentry::setup [array get conf] [array get row] [array get description]
-
         $apu_frame.extras.partial.label configure -text \
           "\$[format'currency [ \
-            expr {([isnumeric $row(APU_qop)] ? $row(APU_qop) : 0) * \
-              ([isnumeric $row(Qtakeoff_qop)] ? $row(Qtakeoff_qop) : 0) * \
+            expr { \
               ([isnumeric $row(APU_cost)] ? $row(APU_cost) : 0)} \
           ]]"
         if { $row(APUSupplies_id) != "" } {

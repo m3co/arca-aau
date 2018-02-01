@@ -70,8 +70,6 @@ namespace eval viewAPUSupplies {
       Supplies_type ""
       APU_expand ""
       APU_parent ""
-      Qtakeoff_upload ""
-      Qtakeoff_qop ""
     }
     set newentry(APUSupplies_APUId) $row(APUSupplies_APUId)
     set newentry(APU_id) $row(APU_id)
@@ -190,26 +188,12 @@ namespace eval viewAPUSupplies {
         pack $conf(frame) -side left
         labelentry::setup [array get conf] [array get row] [array get description]
 
-        pack [label $apu_frame.extras.qtakeoff_qop_text -text "Cantidad:"] \
-          -side left
-        array set conf [list \
-          from viewAPUSupplies \
-          module viewAPUSupplies \
-          idkey id \
-          key Qtakeoff_qop \
-          frame [frame $apu_frame.extras.qtakeoff_qop] \
-          dollar false \
-          currency false \
-        ]
-        pack $conf(frame) -side left
-        labelentry::setup [array get conf] [array get row] [array get description]
-
         pack [label $apu_frame.extras.partial_text -text "Valor Parcial:"] \
           -side left
         pack [frame $apu_frame.extras.partial] -side left
         pack [label $apu_frame.extras.partial.label -text \
           "\$[format'currency [ \
-            expr {([isnumeric $row(Qtakeoff_qop)] ? $row(Qtakeoff_qop) : 0) * \
+            expr { \
               ([isnumeric $row(APU_cost)] ? $row(APU_cost) : 0)} \
           ]]"] -side right
         setup'newentry $apu_frame row
