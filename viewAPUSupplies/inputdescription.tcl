@@ -153,7 +153,7 @@ proc viewAPUSupplies::'do'search { resp } {
     }
   }
   $response(combo) configure -values $found
-  extendcombo::show'listbox $response(combo) ""
+  #extendcombo::show'listbox $response(combo) ""
 }
 
 proc viewAPUSupplies::search'combobox { path key } {
