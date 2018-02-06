@@ -116,7 +116,7 @@ proc viewAPUSupplies::select'combobox { path label e } {
       query [json::write string insert] \
       module [json::write string APUSupplies] \
       row [toJSON [list \
-        APUId [json::write string $entry(APU_id)] \
+        APUId $entry(APU_id) \
         SupplyId [dict get $lastSearch($id) id] \
       ] [dict create APUId {jsontype string} SupplyId {jsontype integer}]] \
     ]
