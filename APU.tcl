@@ -205,7 +205,7 @@ proc APU::'do'update { resp } {
     if { $bgcolori == 3 } {
       set bgc green4
     }
-    if { $response(expand) == false } {
+    if { [array get response expand] == false } {
       set bgc black
     }
     $tree itemconfigure $response(id) \
@@ -260,7 +260,7 @@ proc APU::'do'select { resp } {
     if { $bgcolori == 3 } {
       set bgc green4
     }
-    if { $entry(expand) == false } {
+    if { [array get entry expand] == false } {
       set bgc black
     }
     $tree insert end $root \
@@ -291,7 +291,7 @@ proc APU::'do'insert { resp } {
   if { $bgcolori == 3 } {
     set bgc green4
   }
-  if { $entry(expand) == false } {
+  if { [array get entry expand] == false } {
     set bgc black
   }
   if [$tree exists $entry(id)] {
