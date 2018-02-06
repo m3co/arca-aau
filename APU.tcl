@@ -191,9 +191,26 @@ proc APU::'do'update { resp } {
     array set entry [deserialize [lindex \
       [$tree itemconfigure $response(id) -data] 4]]
     set entry($response(key)) [lindex $response(value) 0]
+    set bgcolori [regexp -all {[.]} $response(id)]
+    set bgc black
+    if { $bgcolori == 0 } {
+      set bgc brown
+    }
+    if { $bgcolori == 1 } {
+      set bgc red
+    }
+    if { $bgcolori == 2 } {
+      set bgc blue
+    }
+    if { $bgcolori == 3 } {
+      set bgc green4
+    }
+    if { $response(expand) == false } {
+      set bgc black
+    }
     $tree itemconfigure $response(id) \
       -text "$response(id) [lindex $response(value) 0]" \
-      -data [array get entry]
+      -data [array get entry] -fill $bgc
   }
 }
 
@@ -229,10 +246,27 @@ proc APU::'do'select { resp } {
     set drawcross allways
   }
   if [$tree exists $root] {
+    set bgcolori [regexp -all {[.]} $entry(id)]
+    set bgc black
+    if { $bgcolori == 0 } {
+      set bgc brown
+    }
+    if { $bgcolori == 1 } {
+      set bgc red
+    }
+    if { $bgcolori == 2 } {
+      set bgc blue
+    }
+    if { $bgcolori == 3 } {
+      set bgc green4
+    }
+    if { $entry(expand) == false } {
+      set bgc black
+    }
     $tree insert end $root \
       $entry(id) -text "$entry(id) $entry(description)" \
         -data $response(row) -drawcross $drawcross \
-        -image [Bitmap::get oplink]
+        -image [Bitmap::get oplink] -fill $bgc
   }
 }
 
@@ -243,13 +277,30 @@ proc APU::'do'insert { resp } {
   if { [string range $entry(id) 0 0] != "-" } {
     return
   }
+  set bgcolori [regexp -all {[.]} $entry(id)]
+  set bgc black
+  if { $bgcolori == 0 } {
+    set bgc brown
+  }
+  if { $bgcolori == 1 } {
+    set bgc red
+  }
+  if { $bgcolori == 2 } {
+    set bgc blue
+  }
+  if { $bgcolori == 3 } {
+    set bgc green4
+  }
+  if { $entry(expand) == false } {
+    set bgc black
+  }
   if [$tree exists $entry(id)] {
     $tree itemconfigure $entry(id) -text "$entry(id) $entry(description)" \
-      -data $response(row) -image [Bitmap::get oplink]
+      -data $response(row) -image [Bitmap::get oplink] -fill $bgc
   } elseif [$tree exists $entry(parent)] {
     $tree itemconfigure $entry(parent) -drawcross allways
     $tree insert end $entry(parent) \
       $entry(id) -text "$entry(id) $entry(description)" \
-        -data $response(row) -image [Bitmap::get oplink]
+        -data $response(row) -image [Bitmap::get oplink] -fill $bgc
   }
 }
