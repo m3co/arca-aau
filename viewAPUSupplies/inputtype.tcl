@@ -33,7 +33,7 @@ proc viewAPUSupplies::turn'combobox'type { path frame e } {
   set combo [ttk::combobox $frame.combo]
   $combo insert 0 $entry(Supplies_type)
   $combo configure -values [list \
-    {Material} {Mano de Obra} {Equipo} {Transporte} {Subcontrato}]
+    {Material} {Mano de Obra} {Herramienta} {Equipo} {Transporte} {Subcontrato}]
   bind $combo <<ComboboxSelected>> [list \
     viewAPUSupplies::select'combobox'type %W $frame.label $e]
 
