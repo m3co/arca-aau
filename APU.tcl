@@ -207,7 +207,7 @@ proc APU::'do'update { resp } {
       set bgc black
     }
     $tree itemconfigure $entry(id) \
-      -text "$entry(id) [lindex $entry(description) 0]" \
+      -text "$entry(id) $entry(description)" \
       -data [array get entry] -fill $bgc
   }
 }
