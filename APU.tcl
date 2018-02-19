@@ -188,9 +188,7 @@ proc APU::'do'update { resp } {
     return
   }
   if [$tree exists $response(id)] {
-    array set entry [deserialize [lindex \
-      [$tree itemconfigure $response(id) -data] 4]]
-    set entry($response(key)) [lindex $response(value) 0]
+    array set entry [deserialize $response(row)]
     set bgcolori [regexp -all {[.]} $response(id)]
     set bgc black
     if { $bgcolori == 0 } {
@@ -208,8 +206,8 @@ proc APU::'do'update { resp } {
     if { [array get response expand] == false } {
       set bgc black
     }
-    $tree itemconfigure $response(id) \
-      -text "$response(id) [lindex $response(value) 0]" \
+    $tree itemconfigure $entry(id) \
+      -text "$entry(id) [lindex $entry(description) 0]" \
       -data [array get entry] -fill $bgc
   }
 }
