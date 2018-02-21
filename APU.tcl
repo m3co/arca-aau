@@ -207,7 +207,8 @@ proc APU::'do'update { resp } {
       set bgc black
     }
     $tree itemconfigure $entry(id) \
-      -text "$entry(id) $entry(description)" \
+      -text "$entry(id) [expr { $entry(description) == "null" ? "" : \
+        $entry(description) }]" \
       -data [array get entry] -fill $bgc
   }
 }
@@ -262,7 +263,8 @@ proc APU::'do'select { resp } {
       set bgc black
     }
     $tree insert end $root \
-      $entry(id) -text "$entry(id) $entry(description)" \
+      $entry(id) -text "$entry(id) [expr { $entry(description) == "null" ? "" : \
+        $entry(description) }]" \
         -data $response(row) -drawcross $drawcross \
         -image [Bitmap::get oplink] -fill $bgc
   }
