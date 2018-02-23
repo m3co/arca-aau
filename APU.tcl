@@ -201,10 +201,10 @@ proc APU::'do'update { resp } {
       set bgc blue
     }
     if { $bgcolori == 3 } {
-      set bgc green4
+      set bgc maroon
     }
     if { [array get response expand] == "expand false" } {
-      set bgc black
+      set bgc green4
     }
     $tree itemconfigure $entry(id) \
       -text "$entry(id) [expr { $entry(description) == "null" ? "" : \
@@ -257,10 +257,10 @@ proc APU::'do'select { resp } {
       set bgc blue
     }
     if { $bgcolori == 3 } {
-      set bgc green4
+      set bgc maroon
     }
     if { [array get entry expand] == "expand false" } {
-      set bgc black
+      set bgc green4
     }
     $tree insert end $root \
       $entry(id) -text "$entry(id) [expr { $entry(description) == "null" ? "" : \
