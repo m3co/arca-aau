@@ -59,6 +59,7 @@ namespace eval viewAPUSupplies {
       APUSupplies_qop ""
       APU_cost ""
       APU_description ""
+      APU_information ""
       APU_id ""
       APU_qop ""
       APU_unit ""
@@ -140,6 +141,18 @@ namespace eval viewAPUSupplies {
           idkey id \
           key APU_description \
           frame [frame $apu_frame.apu_description] \
+          dollar false \
+          currency false \
+        ]
+        pack $conf(frame) -side top -fill x -expand true
+        labelentry::setup [array get conf] [array get row] [array get description]
+
+        array set conf [list \
+          from viewAPUSupplies \
+          module viewAPUSupplies \
+          idkey id \
+          key APU_information \
+          frame [frame $apu_frame.apu_information] \
           dollar false \
           currency false \
         ]

@@ -28,6 +28,17 @@ namespace eval viewAPUSupplies {
           from viewAPUSupplies \
           module viewAPUSupplies \
           idkey id \
+          key APU_information \
+          frame $apu_frame.apu_information \
+          dollar false \
+          currency false \
+        ]
+        labelentry::setup [array get conf] [array get row] [array get description]
+
+        array set conf [list \
+          from viewAPUSupplies \
+          module viewAPUSupplies \
+          idkey id \
           key APU_description \
           frame $apu_frame.apu_description \
           dollar false \
