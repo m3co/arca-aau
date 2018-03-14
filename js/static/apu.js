@@ -23,12 +23,20 @@
       .classed('row', true)
       .call(renderRow);
     rows.exit().remove();
-    document.querySelector('button').addEventListener('click', e => {
+    document.querySelector('form').addEventListener('submit', e => {
+      e.preventDefault();
+      var APUId = document.querySelector('input').value;
       var subir = data.map(d => COLUMNS.reduce((acc, key) => {
-        acc[key] = d[key];
+        acc[key] = (key === 'cost' || key === 'qop') ? Number(d[key]) : d[key];
         return acc;
-      }, {}));
-      console.log(subir);
+      }, { APUId: APUId })).map(d => ({
+        query: 'insert',
+        module: 'importAPUSupplies',
+        from: 'importAPUSupplies',
+        row: d
+      })).forEach(event => {
+        client.emit('data', event);
+      });
     });
   });
 })();
