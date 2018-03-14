@@ -12,7 +12,7 @@
 
   client.on('response', (data) => {
     var query = data.query;
-    console.log('not processed', data);
+    //console.log('not processed', data);
   });
   window.client = client;
 })(io);
