@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node middleware.js",
-    "static": "http-server -c-1 -p 1134 ./static"
+    "static": "http-server -c-1 -p 9002 ./static"
   },
   "author": "Andres Rios <rianby64@gmail.com>",
   "license": "ISC",
