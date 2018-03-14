@@ -1,8 +1,6 @@
 'use strict';
 (() => {
-
   var COLUMNS = ['description', 'unit', 'cost', 'qop'];
-
   function renderRow(selection) {
     var cols = selection.selectAll('td.col')
       .data(d => Object.keys(d).map(c => d[c]));
@@ -19,13 +17,18 @@
         acc[COLUMNS[i] ? COLUMNS[i] : `xtra${i}`] = d;
         return acc;
       }, {}));
-    console.log(data);
     var rows = d3.select('tbody').selectAll('tr.row').data(data);
     rows.call(renderRow);
     rows.enter().append('tr')
       .classed('row', true)
       .call(renderRow);
     rows.exit().remove();
+    document.querySelector('button').addEventListener('click', e => {
+      var subir = data.map(d => COLUMNS.reduce((acc, key) => {
+        acc[key] = d[key];
+        return acc;
+      }, {}));
+      console.log(subir);
+    });
   });
-
 })();
