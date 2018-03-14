@@ -26,7 +26,7 @@
     document.querySelector('form').addEventListener('submit', e => {
       e.preventDefault();
       var APUId = document.querySelector('input').value;
-      var subir = data.map(d => COLUMNS.reduce((acc, key) => {
+      data.map(d => COLUMNS.reduce((acc, key) => {
         acc[key] = (key === 'cost' || key === 'qop') ? Number(d[key]) : d[key];
         return acc;
       }, { APUId: APUId })).map(d => ({
