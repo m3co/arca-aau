@@ -1,6 +1,6 @@
 'use strict';
 (() => {
-  var COLUMNS = ['description', 'unit', 'cost', 'qop'];
+  var COLUMNS = ['type', 'description', 'unit', 'cost', 'qop'];
   function renderRow(selection) {
     var cols = selection.selectAll('td.col')
       .data(d => Object.keys(d).map(c => d[c]));
