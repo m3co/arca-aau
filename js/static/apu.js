@@ -37,6 +37,6 @@
       })).forEach(event => {
         client.emit('data', event);
       });
-    });
+    }, { once: true });
   });
 })();
