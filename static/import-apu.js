@@ -25,14 +25,14 @@
     rows.exit().remove();
     document.querySelector('form').addEventListener('submit', e => {
       e.preventDefault();
-      var APUId = document.querySelector('input').value;
+      var AAUId = document.querySelector('input').value;
       data.map(d => COLUMNS.reduce((acc, key) => {
         acc[key] = (key === 'cost' || key === 'qop') ? Number(d[key]) : d[key];
         return acc;
-      }, { APUId: APUId })).map(d => ({
+      }, { AAUId: AAUId })).map(d => ({
         query: 'insert',
-        module: 'importAPUSupplies',
-        from: 'importAPUSupplies',
+        module: 'importAAUSupplies',
+        from: 'importAAUSupplies',
         row: d
       })).forEach(event => {
         client.emit('data', event);
