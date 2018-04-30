@@ -50,8 +50,9 @@
     }, 300);
   }
 
-  function setupEntry(selection) {
-    selection.append('span').text(d => d.AAU_description)
+  function setupEntry(key, idkey) {
+  return function redact(selection) {
+    selection.append('span').text(d => d[key])
       .on('click', () => {
         var e = d3.event;
         var span = e.target;
@@ -72,6 +73,7 @@
         if (entry.value != d[entry.key]) {
           entry.query = 'update';
           entry.model = 'viewAAUSupplies';
+          console.log(entry);
         }
 
         var span = form.previousElementSibling;
@@ -81,12 +83,12 @@
 
     fr.append('input')
       .attr('type', 'text')
-      .attr('value', d => d.AAU_description)
+      .attr('value', d => d[key])
       .attr('name', 'value');
 
     fr.append('input')
       .attr('type', 'hidden')
-      .attr('value', 'AAU_description')
+      .attr('value', key)
       .attr('name', 'key');
 
     fr.append('input')
@@ -96,8 +98,9 @@
 
     fr.append('input')
       .attr('type', 'hidden')
-      .attr('value', 'id')
+      .attr('value', idkey)
       .attr('name', 'idkey');
+  }
   }
 
   function render() {
@@ -117,10 +120,11 @@
     tr.append('td').text(d => d.AAU_qop);
     tr = table.append('tr');
     var ds = tr.append('td').attr('colspan', 4);
-    ds.call(setupEntry);
+    ds.call(setupEntry('AAU_description', 'id'));
 
     tr = table.append('tr');
-    tr.append('td').text(d => d.AAU_information).attr('colspan', 4);
+    ds = tr.append('td').attr('colspan', 4);
+    ds.call(setupEntry('AAU_information', 'id'));
 
     table = apu.append('table');
     tr = table.selectAll('thead')
