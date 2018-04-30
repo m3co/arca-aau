@@ -1,6 +1,7 @@
 'use strict';
 (() => {
 
+  var SymId = Symbol();
   var lastSTO;
   var blocks = {};
   window.blocks = blocks;
@@ -13,6 +14,7 @@
       };
     }
     var AAU = blocks[row.AAU_id];
+    AAU[SymId] = row.id;
     AAU.id = row.AAU_id;
     AAU.qop = row.AAU_qop;
     AAU.unit = row.AAU_unit;
@@ -64,7 +66,36 @@
     tr.append('td').text(d => d.cost);
     tr.append('td').text(d => d.qop);
     tr = table.append('tr');
-    tr.append('td').text(d => d.description).attr('colspan', 4);
+    var ds = tr.append('td').attr('colspan', 4);
+    ds.append('span').text(d => d.description);
+    var fr = ds.append('form')
+      .on('submit', () => {
+        var e = d3.event;
+        e.preventDefault();
+        var fd = new FormData(e.target);
+        var entry = fd.toJSON();
+      });
+
+    fr.append('input')
+      .attr('type', 'text')
+      .attr('value', d => d.description)
+      .attr('name', 'value');
+
+    fr.append('input')
+      .attr('type', 'hidden')
+      .attr('value', 'AAU_description')
+      .attr('name', 'key');
+
+    fr.append('input')
+      .attr('type', 'hidden')
+      .attr('value', d => d[SymId])
+      .attr('name', 'id');
+
+    fr.append('input')
+      .attr('type', 'hidden')
+      .attr('value', 'id')
+      .attr('name', 'idkey');
+
     tr = table.append('tr');
     tr.append('td').text(d => d.information).attr('colspan', 4);
 
