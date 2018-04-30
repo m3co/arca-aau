@@ -23,20 +23,19 @@
     AAU.AAU_description = row.AAU_description;
     AAU.AAU_information = row.AAU_information;
 
-    var Supply = {};
-    Supply.Supplies_id = row.Supplies_id;
-    Supply.Supplies_cost = row.Supplies_cost;
-    Supply.Supplies_type = row.Supplies_type;
-    Supply.Supplies_unit = row.Supplies_unit;
-    Supply.Supplies_description = row.Supplies_description;
-
     var AAUSupply = {};
+    AAUSupply[SymId] = row.id;
     AAUSupply.AAUSupplies_id = row.AAUSupplies_id;
     AAUSupply.AAUSupplies_qop = row.AAUSupplies_qop;
     AAUSupply.AAUSupplies_AAUId = row.AAUSupplies_AAUId;
     AAUSupply.AAUSupplies_SupplyId = row.AAUSupplies_SupplyId;
 
-    AAUSupply.Supply = Supply;
+    AAUSupply.Supplies_id = row.Supplies_id;
+    AAUSupply.Supplies_cost = row.Supplies_cost;
+    AAUSupply.Supplies_type = row.Supplies_type;
+    AAUSupply.Supplies_unit = row.Supplies_unit;
+    AAUSupply.Supplies_description = row.Supplies_description;
+
     AAUSupply.AAU = AAU;
     if (AAUSupply.AAUSupplies_id) {
       AAU.AAUSupplies.push(AAUSupply);
@@ -50,7 +49,7 @@
     }, 300);
   }
 
-  function setupEntry(key, idkey) {
+  function setupEntry(idkey, key) {
   return function redact(selection) {
     selection.append('span').text(d => d[key])
       .on('click', () => {
@@ -115,16 +114,16 @@
     table = apu.append('table');
     tr = table.append('tr');
     tr.append('td').text(d => d.AAU_id);
-    tr.append('td').text(d => d.AAU_unit);
-    tr.append('td').text(d => d.AAU_cost);
-    tr.append('td').text(d => d.AAU_qop);
+    tr.append('td').call(setupEntry('id', 'AAU_unit'));
+    tr.append('td').call(setupEntry('id', 'AAU_cost'));
+    tr.append('td').call(setupEntry('id', 'AAU_qop'));
     tr = table.append('tr');
-    var ds = tr.append('td').attr('colspan', 4);
-    ds.call(setupEntry('AAU_description', 'id'));
+    tr.append('td').attr('colspan', 4)
+      .call(setupEntry('id', 'AAU_description'));
 
     tr = table.append('tr');
-    ds = tr.append('td').attr('colspan', 4);
-    ds.call(setupEntry('AAU_information', 'id'));
+    tr.append('td').attr('colspan', 4)
+      .call(setupEntry('id', 'AAU_information'));
 
     table = apu.append('table');
     tr = table.selectAll('thead')
@@ -141,11 +140,11 @@
       .data(d => d.AAUSupplies)
       .enter().append('tbody').append('tr').classed('aausupply', true);
 
-    tr.append('td').text(d => d.Supply.Supplies_type);
-    tr.append('td').text(d => d.Supply.Supplies_description);
-    tr.append('td').text(d => d.Supply.Supplies_unit);
-    tr.append('td').text(d => d.Supply.Supplies_cost);
-    tr.append('td').text(d => d.AAUSupplies_qop);
+    tr.append('td').call(setupEntry('id', 'Supplies_type'));
+    tr.append('td').call(setupEntry('id', 'Supplies_description'));
+    tr.append('td').call(setupEntry('id', 'Supplies_unit'));
+    tr.append('td').call(setupEntry('id', 'Supplies_cost'));
+    tr.append('td').call(setupEntry('id', 'AAUSupplies_qop'));
     tr.append('td').append('button').text('-');
 
     apu.append('button').text('+');
