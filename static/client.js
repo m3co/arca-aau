@@ -34,7 +34,12 @@
       if (data.module == 'fnConcretizeAAU') {
         tree.doselect(data.row);
       } else if (data.module == 'viewAAUSupplies') {
-        viewaausupplies.doselect(data.row);
+        if (query == 'select') {
+          viewaausupplies.doselect(data.row);
+        }
+        if (query == 'update') {
+          viewaausupplies.doupdate(data.row);
+        }
       } else if (data.module == 'Supplies') {
         //supplies.doselect(data.row);
       } else {

@@ -6,6 +6,10 @@
   var blocks = {};
   window.blocks = blocks;
 
+  function doupdate(row) {
+    console.log('do update', row);
+  }
+
   function doselect(row) {
     if (row.AAU_expand) return;
     if (!blocks[row.AAU_id]) {
@@ -71,8 +75,8 @@
 
         if (entry.value != d[entry.key]) {
           entry.query = 'update';
-          entry.model = 'viewAAUSupplies';
-          console.log(entry);
+          entry.module = 'viewAAUSupplies';
+          client.emit('data', entry);
         }
 
         var span = form.previousElementSibling;
@@ -165,6 +169,7 @@
 
   window.viewaausupplies = {
     doselect: doselect,
+    doupdate: doupdate,
     request: request
   };
 })();
