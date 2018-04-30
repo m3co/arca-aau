@@ -70,8 +70,8 @@
 
     tr.append('label')
       .attr('for', d => d.id_to_concrete)
-      .text(d => `${d.id_to_concrete} ${d.description_to_concrete}`);
-      //.on('click', content.request);
+      .text(d => `${d.id_to_concrete} ${d.description_to_concrete}`)
+      .on('click', viewaausupplies.request);
     tr.append('input')
       .attr('type', 'checkbox')
       .attr('for', d => d.id_to_concrete)
@@ -97,8 +97,8 @@
         .attr('href', '#').text(d => `${d.id_to_concrete} ${d.description_to_concrete}`)
         .style('color', d =>
           d.status == 'empty' ? 'gray' : (d.status == 'full' ? 'black' : 'blue')
-        );
-        //.on('click', content.request);
+        )
+        .on('click', viewaausupplies.request);
 
     for (var i = 0; i < tree[Children].length; i++) {
       if (tree[Children][i].expand) {
