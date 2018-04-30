@@ -36,7 +36,9 @@
 
     AAUSupply.Supply = Supply;
     AAUSupply.AAU = AAU;
-    AAU.AAUSupplies.push(AAUSupply);
+    if (AAUSupply.id) {
+      AAU.AAUSupplies.push(AAUSupply);
+    }
 
     if (lastSTO) {
       clearTimeout(lastSTO);
@@ -58,10 +60,20 @@
     apu.append('span').text(d => d.cost);
     apu.append('span').text(d => d.qop);
 
-    var tr = apu.append('table')
-      .selectAll('tr.aausupply')
+    var table = apu.append('table');
+    var tr;
+    tr = table.selectAll('thead')
+      .data(['thead']).enter()
+      .append('tr');
+    tr.append('th').text('Tipo');
+    tr.append('th').text('Descripcion');
+    tr.append('th').text('Unidad');
+    tr.append('th').text('Costo');
+    tr.append('th').text('Rdto');
+
+    tr = table.selectAll('tbody tr.aausupply')
       .data(d => d.AAUSupplies)
-      .enter().append('tr');
+      .enter().append('tbody').append('tr').classed('aausupply', true);
 
     tr.append('td').text(d => d.Supply.type);
     tr.append('td').text(d => d.Supply.description);
