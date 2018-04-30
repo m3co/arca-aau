@@ -54,14 +54,21 @@
       .data(Object.keys(blocks).map(key => blocks[key]))
       .enter().append('div').classed('block', true);
 
-    apu.append('span').text(d => d.id);
-    apu.append('span').text(d => d.description);
-    apu.append('span').text(d => d.unit);
-    apu.append('span').text(d => d.cost);
-    apu.append('span').text(d => d.qop);
-
-    var table = apu.append('table');
+    var table;
     var tr;
+
+    table = apu.append('table');
+    tr = table.append('tr');
+    tr.append('td').text(d => d.id);
+    tr.append('td').text(d => d.unit);
+    tr.append('td').text(d => d.cost);
+    tr.append('td').text(d => d.qop);
+    tr = table.append('tr');
+    tr.append('td').text(d => d.description).attr('colspan', 4);
+    tr = table.append('tr');
+    tr.append('td').text(d => d.information).attr('colspan', 4);
+
+    table = apu.append('table');
     tr = table.selectAll('thead')
       .data(['thead']).enter()
       .append('tr');
@@ -70,6 +77,7 @@
     tr.append('th').text('Unidad');
     tr.append('th').text('Costo');
     tr.append('th').text('Rdto');
+    tr.append('th').text('');
 
     tr = table.selectAll('tbody tr.aausupply')
       .data(d => d.AAUSupplies)
@@ -80,6 +88,10 @@
     tr.append('td').text(d => d.Supply.unit);
     tr.append('td').text(d => d.Supply.cost);
     tr.append('td').text(d => d.qop);
+    tr.append('td').append('button').text('-');
+
+    apu.append('button').text('+');
+    apu.append('button').text('Importar');
   }
 
   function request(d) {
