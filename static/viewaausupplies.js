@@ -50,24 +50,8 @@
     }, 300);
   }
 
-  function render() {
-    var apu = d3.select('div.blocks')
-      .selectAll('div.block')
-      .data(Object.keys(blocks).map(key => blocks[key]))
-      .enter().append('div').classed('block', true);
-
-    var table;
-    var tr;
-
-    table = apu.append('table');
-    tr = table.append('tr');
-    tr.append('td').text(d => d.AAU_id);
-    tr.append('td').text(d => d.AAU_unit);
-    tr.append('td').text(d => d.AAU_cost);
-    tr.append('td').text(d => d.AAU_qop);
-    tr = table.append('tr');
-    var ds = tr.append('td').attr('colspan', 4);
-    ds.append('span').text(d => d.AAU_description)
+  function setupEntry(selection) {
+    selection.append('span').text(d => d.AAU_description)
       .on('click', () => {
         var e = d3.event;
         var span = e.target;
@@ -75,7 +59,8 @@
         span.hidden = true;
         form.hidden = false;
       });
-    var fr = ds.append('form')
+
+    var fr = selection.append('form')
       .attr('hidden', true)
       .on('submit', (d) => {
         var e = d3.event;
@@ -84,8 +69,10 @@
         var fd = new FormData(form);
         var entry = fd.toJSON();
 
-        console.log(entry.value, entry);
-        console.log(d);
+        if (entry.value != d[entry.key]) {
+          entry.query = 'update';
+          entry.model = 'viewAAUSupplies';
+        }
 
         var span = form.previousElementSibling;
         span.hidden = false;
@@ -111,6 +98,26 @@
       .attr('type', 'hidden')
       .attr('value', 'id')
       .attr('name', 'idkey');
+  }
+
+  function render() {
+    var apu = d3.select('div.blocks')
+      .selectAll('div.block')
+      .data(Object.keys(blocks).map(key => blocks[key]))
+      .enter().append('div').classed('block', true);
+
+    var table;
+    var tr;
+
+    table = apu.append('table');
+    tr = table.append('tr');
+    tr.append('td').text(d => d.AAU_id);
+    tr.append('td').text(d => d.AAU_unit);
+    tr.append('td').text(d => d.AAU_cost);
+    tr.append('td').text(d => d.AAU_qop);
+    tr = table.append('tr');
+    var ds = tr.append('td').attr('colspan', 4);
+    ds.call(setupEntry);
 
     tr = table.append('tr');
     tr.append('td').text(d => d.AAU_information).attr('colspan', 4);
