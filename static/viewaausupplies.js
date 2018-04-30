@@ -67,13 +67,26 @@
     tr.append('td').text(d => d.qop);
     tr = table.append('tr');
     var ds = tr.append('td').attr('colspan', 4);
-    ds.append('span').text(d => d.description);
+    ds.append('span').text(d => d.description)
+      .on('click', () => {
+        var e = d3.event;
+        var span = e.target;
+        var form = span.nextElementSibling;
+        span.hidden = true;
+        form.hidden = false;
+      });
     var fr = ds.append('form')
+      .attr('hidden', true)
       .on('submit', () => {
         var e = d3.event;
         e.preventDefault();
-        var fd = new FormData(e.target);
+        var form = e.target;;
+        var fd = new FormData(form);
         var entry = fd.toJSON();
+
+        var span = form.previousElementSibling;
+        span.hidden = false;
+        form.hidden = true;
       });
 
     fr.append('input')
