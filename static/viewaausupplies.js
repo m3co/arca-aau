@@ -47,13 +47,34 @@
   }
 
   function render() {
-    console.log(blocks);
+    var apu = d3.select('div.blocks')
+      .selectAll('div.block')
+      .data(Object.keys(blocks).map(key => blocks[key]))
+      .enter().append('div').classed('block', true);
+
+    apu.append('span').text(d => d.id);
+    apu.append('span').text(d => d.description);
+    apu.append('span').text(d => d.unit);
+    apu.append('span').text(d => d.cost);
+    apu.append('span').text(d => d.qop);
+
+    var tr = apu.append('table')
+      .selectAll('tr.aausupply')
+      .data(d => d.AAUSupplies)
+      .enter().append('tr');
+
+    tr.append('td').text(d => d.Supply.type);
+    tr.append('td').text(d => d.Supply.description);
+    tr.append('td').text(d => d.Supply.unit);
+    tr.append('td').text(d => d.Supply.cost);
+    tr.append('td').text(d => d.qop);
   }
 
   function request(d) {
     Object.keys(blocks).forEach(key => {
       delete blocks[key];
     });
+    d3.select('div.blocks').html('');
     client.emit('data', {
       query: 'select',
       module: 'viewAAUSupplies',
