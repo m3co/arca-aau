@@ -17,6 +17,24 @@
     AAU.AAU_description = row.AAU_description;
     AAU.AAU_information = row.AAU_information;
 
+    var found;
+    if (blocks[row.AAU_id]) {
+      found = blocks[row.AAU_id].AAUSupplies
+        .find(d => d.AAUSupplies_id == row.AAUSupplies_id);
+
+      if (found) {
+        found.Supplies_cost = row.Supplies_cost;
+        found.Supplies_description = row.Supplies_description;
+        found.Supplies_type = row.Supplies_type;
+        found.Supplies_unit = row.Supplies_unit;
+        found.Supplies_id = row.Supplies_id;
+        found.AAUSupplies_qop = row.AAUSupplies_qop;
+        found.AAUSupplies_id = row.AAUSupplies_id;
+        found.AAUSupplies_AAUId = row.AAUSupplies_AAUId;
+        found.AAUSupplies_SupplyId = row.AAUSupplies_SupplyId;
+      }
+    }
+
     if (lastSTO) {
       clearTimeout(lastSTO);
     }
@@ -137,6 +155,13 @@
     apu.select('td[column="AAU_qop"] span').text(d => d.AAU_qop);
     apu.select('td[column="AAU_description"] span').text(d => d.AAU_description);
     apu.select('td[column="AAU_information"] span').text(d => d.AAU_information);
+
+    tr = apu.selectAll('tbody tr.aausupply')
+    tr.select('td[column="Supplies_type"] span').text(d => d.Supplies_type);
+    tr.select('td[column="Supplies_description"] span').text(d => d.Supplies_description);
+    tr.select('td[column="Supplies_unit"] span').text(d => d.Supplies_unit);
+    tr.select('td[column="Supplies_qop"] span').text(d => d.Supplies_qop);
+    tr.select('td[column="AAUSupplies_qop"] span').text(d => d.AAUSupplies_qop);
 
     var apu = apu.enter().append('div').classed('block', true);
 
