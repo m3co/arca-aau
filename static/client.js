@@ -29,16 +29,18 @@
       if (data.module == 'fnConcretizeAAU') {
         if (query == 'select') {
           tree.doselect(data.row);
-        }
-        if (query == 'update') {
+        } else if (query == 'update') {
           tree.doselect(data.row);
+        } else {
+          console.log('sin procesar fnConcretizeAAU', data);
         }
       } else if (data.module == 'viewAAUSupplies') {
         if (query == 'select') {
           viewaausupplies.doselect(data.row);
-        }
-        if (query == 'update') {
+        } else if (query == 'update') {
           viewaausupplies.doupdate(data.row);
+        } else {
+          console.log('sin procesar viewAAUSupplies', data);
         }
       } else {
         console.log('sin procesar', data.row);

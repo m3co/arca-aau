@@ -73,7 +73,26 @@
   function setupConcretize(d) {
     if (!d.parent_to_concrete) return;
     d3.select(this).append('div').classed('concretize', true)
-      .append('button').text(d => d.id_concreted == null ? 'o' : 'x');
+      .append('button').text(d => d.id_concreted == null ? 'o' : 'x')
+      .on('click', (d) => {
+        var req;
+        if (d.id_concreted == null) {
+          req = {
+            query: 'concretize',
+            module: 'fnConcretizeAAU',
+            keynote: d.id_general,
+            project: d.id_to_concrete.split('.')[0]
+          };
+        } else {
+          req = {
+            query: 'deconcretize',
+            module: 'fnConcretizeAAU',
+            keynote: d.id_concreted,
+            project: d.id_to_concrete.split('.')[0]
+          };
+        }
+        client.emit('data', req);
+      });
   }
 
   function render(base, tree) {

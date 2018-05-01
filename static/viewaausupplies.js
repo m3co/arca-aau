@@ -8,6 +8,7 @@
 
   function doupdate(row) {
     var AAU = blocks[row.AAU_id];
+    if (!AAU) return;
     AAU[SymId] = row.id;
     AAU.AAU_id = row.AAU_id;
     AAU.AAU_qop = row.AAU_qop;
