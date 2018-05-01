@@ -226,12 +226,43 @@
     tr.exit().remove();
     tr = tr.enter().append('tbody').append('tr').classed('aausupply', true);
 
-    tr.append('td').call(setupEntry('id', 'Supplies_type', 'viewAAUSupplies'));
-    tr.append('td').call(setupEntry('id', 'Supplies_description', 'viewAAUSupplies'));
-    tr.append('td').call(setupEntry('id', 'Supplies_unit', 'viewAAUSupplies'));
-    tr.append('td').call(setupEntry('id', 'Supplies_cost', 'viewAAUSupplies'));
-    tr.append('td').call(setupEntry('id', 'AAUSupplies_qop', 'viewAAUSupplies'));
-    tr.append('td').append('button').text('-')
+    tr.append('td').call(function(selection) {
+      var sel = selection.append('select');
+      sel.append('option')
+        .attr('value', 'Material')
+        .attr('selected', d => d.Supplies_type == 'Material' ? true : null)
+        .text('Material');
+      sel.append('option')
+        .attr('value', 'Mano de Obra')
+        .attr('selected', d => d.Supplies_type == 'Mano de Obra' ? true : null)
+        .text('Mano de Obra');
+      sel.append('option')
+        .attr('value', 'Equipo')
+        .attr('selected', d => d.Supplies_type == 'Equipo' ? true : null)
+        .text('Equipo');
+      sel.append('option')
+        .attr('value', 'Herramienta')
+        .attr('selected', d => d.Supplies_type == 'Herramienta' ? true : null)
+        .text('Herramienta');
+      sel.append('option')
+        .attr('value', 'Transporte')
+        .attr('selected', d => d.Supplies_type == 'Transporte' ? true : null)
+        .text('Transporte');
+      sel.append('option')
+        .attr('value', 'Subcontrato')
+        .attr('selected', d => d.Supplies_type == 'Subcontrato' ? true : null)
+        .text('Subcontrato');
+    });
+    tr.append('td')
+      .call(setupEntry('id', 'Supplies_description', 'viewAAUSupplies'));
+    tr.append('td')
+      .call(setupEntry('id', 'Supplies_unit', 'viewAAUSupplies'));
+    tr.append('td')
+      .call(setupEntry('id', 'Supplies_cost', 'viewAAUSupplies'));
+    tr.append('td')
+      .call(setupEntry('id', 'AAUSupplies_qop', 'viewAAUSupplies'));
+    tr.append('td')
+      .append('button').text('-')
       .on('click', d => {
         console.log(d, 'eliminar');
       });
