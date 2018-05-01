@@ -15,7 +15,7 @@
   tree[Ready] = false;
   var unsorted = [];
 
-  window.tree = tree;
+  window.trees = tree;
   window.unsorted = unsorted;
 
   var lastSTO, skipOnce = true;
@@ -49,6 +49,16 @@
       if (!found) {
         parent_to_concrete[Children].push(row);
         parent_to_concrete[Ready] = true;
+      } else {
+        Object.keys(row).forEach(key => {
+          found[key] = row[key];
+        });
+
+        d3.select(`[id="item-${row.id_to_concrete}"]`)
+          .text(`${row.id_to_concrete} ${
+            row.description_concreted ?
+              row.description_concreted : row.description_to_concrete}`);
+        return;
       }
     }
 
@@ -70,7 +80,10 @@
 
     tr.append('label')
       .attr('for', d => d.id_to_concrete)
-      .text(d => `${d.id_to_concrete} ${d.description_to_concrete}`)
+      .attr('id', d => `item-${d.id_to_concrete}`)
+      .text(d => `${d.id_to_concrete} ${
+        d.description_concreted ?
+          d.description_concreted : d.description_to_concrete}`)
       .on('click', viewaausupplies.request);
     tr.append('input')
       .attr('type', 'checkbox')
@@ -94,7 +107,10 @@
 
     base.selectAll('li.file').data(tree[Children].filter(d => !d.expand))
       .enter().append('li').attr('class', 'file').append('a')
-        .attr('href', '#').text(d => `${d.id_to_concrete} ${d.description_to_concrete}`)
+        .attr('id', d => `item-${d.id_to_concrete}`)
+        .attr('href', '#').text(d => `${d.id_to_concrete} ${
+          d.description_concreted ?
+            d.description_concreted : d.description_to_concrete}`)
         .style('color', d =>
           d.status == 'empty' ? 'gray' : (d.status == 'full' ? 'black' : 'blue')
         )

@@ -21,28 +21,25 @@
       query: 'subscribe',
       module: 'viewAAUSupplies'
     });
-
-    client.emit('data', {
-      query: 'subscribe',
-      module: 'Supplies'
-    });
   });
 
   client.on('response', (data) => {
     var query = data.query;
     if (data.row) {
       if (data.module == 'fnConcretizeAAU') {
-        tree.doselect(data.row);
+        if (query == 'select') {
+          tree.doselect(data.row);
+        }
+        if (query == 'update') {
+          tree.doselect(data.row);
+        }
       } else if (data.module == 'viewAAUSupplies') {
         if (query == 'select') {
           viewaausupplies.doselect(data.row);
         }
         if (query == 'update') {
-          console.log(data);
           viewaausupplies.doupdate(data.row);
         }
-      } else if (data.module == 'Supplies') {
-        //supplies.doselect(data.row);
       } else {
         console.log('sin procesar', data.row);
       }
