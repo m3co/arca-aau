@@ -1,4 +1,16 @@
 
+li > div.concretize {
+  position: absolute;
+  top: 0;
+  left: 28px;
+}
+
+li.file > div.concretize {
+  position: absolute;
+  top: 0;
+  left: 15px;
+}
+
 ol.tree
 {
   padding: 0 0 0 30px;

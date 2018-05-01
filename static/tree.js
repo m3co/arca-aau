@@ -105,16 +105,31 @@
       });
     tr.append('ol').attr('root', d => d.id_to_concrete);
 
-    base.selectAll('li.file').data(tree[Children].filter(d => !d.expand))
-      .enter().append('li').attr('class', 'file').append('a')
-        .attr('id', d => `item-${d.id_to_concrete}`)
-        .attr('href', '#').text(d => `${d.id_to_concrete} ${
-          d.description_concreted ?
-            d.description_concreted : d.description_to_concrete}`)
-        .style('color', d =>
-          d.status == 'empty' ? 'gray' : (d.status == 'full' ? 'black' : 'blue')
-        )
-        .on('click', viewaausupplies.request);
+    tr.append('div').classed('concretize', true)
+      .append('button').text(d => {
+        if (d.id_concreted == null) return 'o';
+        return 'x';
+      });
+
+    var tr = base.selectAll('li.file')
+      .data(tree[Children].filter(d => !d.expand))
+      .enter().append('li').attr('class', 'file');
+
+    tr.append('a')
+      .attr('id', d => `item-${d.id_to_concrete}`)
+      .attr('href', '#').text(d => `${d.id_to_concrete} ${
+        d.description_concreted ?
+          d.description_concreted : d.description_to_concrete}`)
+      .style('color', d =>
+        d.status == 'empty' ? 'gray' : (d.status == 'full' ? 'black' : 'blue')
+      )
+      .on('click', viewaausupplies.request);
+
+    tr.append('div').classed('concretize', true)
+      .append('button').text(d => {
+        if (d.id_concreted == null) return 'o';
+        return 'x';
+      });
 
     for (var i = 0; i < tree[Children].length; i++) {
       if (tree[Children][i].expand) {
