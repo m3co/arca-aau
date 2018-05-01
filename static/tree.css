@@ -2,13 +2,19 @@
 li > div.concretize {
   position: absolute;
   top: 0;
-  left: 28px;
+  left: 26px;
 }
 
 li.file > div.concretize {
   position: absolute;
   top: 0;
-  left: 15px;
+  left: 13px;
+}
+
+div.concretize > button {
+  width: 11px;
+  height: 11px;
+  font-size: 7px;
 }
 
 ol.tree

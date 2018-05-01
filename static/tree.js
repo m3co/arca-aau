@@ -70,6 +70,12 @@
     }, 300);
   }
 
+  function setupConcretize(d) {
+    if (!d.parent_to_concrete) return;
+    d3.select(this).append('div').classed('concretize', true)
+      .append('button').text(d => d.id_concreted == null ? 'o' : 'x');
+  }
+
   function render(base, tree) {
     if (!(tree[Children] instanceof Array)) {
       return;
@@ -105,11 +111,7 @@
       });
     tr.append('ol').attr('root', d => d.id_to_concrete);
 
-    tr.append('div').classed('concretize', true)
-      .append('button').text(d => {
-        if (d.id_concreted == null) return 'o';
-        return 'x';
-      });
+    tr.each(setupConcretize);
 
     var tr = base.selectAll('li.file')
       .data(tree[Children].filter(d => !d.expand))
@@ -125,11 +127,7 @@
       )
       .on('click', viewaausupplies.request);
 
-    tr.append('div').classed('concretize', true)
-      .append('button').text(d => {
-        if (d.id_concreted == null) return 'o';
-        return 'x';
-      });
+    tr.each(setupConcretize);
 
     for (var i = 0; i < tree[Children].length; i++) {
       if (tree[Children][i].expand) {
