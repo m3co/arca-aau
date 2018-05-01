@@ -7,7 +7,22 @@
   window.blocks = blocks;
 
   function doupdate(row) {
-    console.log('do update', row);
+    var AAU = blocks[row.AAU_id];
+    AAU[SymId] = row.id;
+    AAU.AAU_id = row.AAU_id;
+    AAU.AAU_qop = row.AAU_qop;
+    AAU.AAU_unit = row.AAU_unit;
+    AAU.AAU_cost = row.AAU_cost;
+    AAU.AAU_is_estimated = row.AAU_is_estimated;
+    AAU.AAU_description = row.AAU_description;
+    AAU.AAU_information = row.AAU_information;
+
+    if (lastSTO) {
+      clearTimeout(lastSTO);
+    }
+    lastSTO = setTimeout(() => {
+      render();
+    }, 300);
   }
 
   function doselect(row) {
@@ -55,7 +70,8 @@
 
   function setupEntry(idkey, key) {
   return function redact(selection) {
-    selection.append('span').text(d => d[key])
+    selection.attr('column', key)
+      .append('span').text(d => d[key])
       .on('click', () => {
         var e = d3.event;
         var span = e.target;
@@ -74,6 +90,8 @@
         var entry = fd.toJSON();
 
         if (entry.value != d[entry.key]) {
+          entry.value = [entry.value];
+          entry.key = [entry.key];
           entry.query = 'update';
           entry.module = 'viewAAUSupplies';
           client.emit('data', entry);
@@ -107,21 +125,31 @@
   }
 
   function render() {
-    var apu = d3.select('div.blocks')
-      .selectAll('div.block')
-      .data(Object.keys(blocks).map(key => blocks[key]))
-      .enter().append('div').classed('block', true);
-
     var table;
     var tr;
 
+    var apu = d3.select('div.blocks')
+      .selectAll('div.block')
+      .data(Object.keys(blocks).map(key => blocks[key]));
+
+    apu.select('td[column="AAU_unit"] span').text(d => d.AAU_unit);
+    apu.select('td[column="AAU_cost"] span').text(d => d.AAU_cost);
+    apu.select('td[column="AAU_qop"] span').text(d => d.AAU_qop);
+    apu.select('td[column="AAU_description"] span').text(d => d.AAU_description);
+    apu.select('td[column="AAU_information"] span').text(d => d.AAU_information);
+
+    var apu = apu.enter().append('div').classed('block', true);
+
     table = apu.append('table');
-    tr = table.append('tr');
+    tr = table.append('tr')
+      .classed('first', true);
     tr.append('td').text(d => d.AAU_id);
     tr.append('td').call(setupEntry('id', 'AAU_unit'));
     tr.append('td').call(setupEntry('id', 'AAU_cost'));
     tr.append('td').call(setupEntry('id', 'AAU_qop'));
-    tr = table.append('tr');
+    tr = table.append('tr')
+      .classed('second', true);
+
     tr.append('td').attr('colspan', 4)
       .call(setupEntry('id', 'AAU_description'));
 

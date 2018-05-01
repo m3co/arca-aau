@@ -38,6 +38,7 @@
           viewaausupplies.doselect(data.row);
         }
         if (query == 'update') {
+          console.log(data);
           viewaausupplies.doupdate(data.row);
         }
       } else if (data.module == 'Supplies') {
