@@ -27,9 +27,14 @@
     var query = data.query;
     if (data.row) {
       if (data.module == 'fnConcretizeAAU') {
-        if (query == 'select') {
+        if (query == 'select' || query == 'insert') {
           tree.doselect(data.row);
         } else if (query == 'update') {
+          tree.doselect(data.row);
+        } else if (query == 'delete') {
+          data.row.description_concreted = null;
+          data.row.id_concreted = null;
+          data.row.parent_concreted = null;
           tree.doselect(data.row);
         } else {
           console.log('sin procesar fnConcretizeAAU', data);

@@ -58,6 +58,9 @@
           .text(`${row.id_to_concrete} ${
             row.description_concreted ?
               row.description_concreted : row.description_to_concrete}`);
+
+        d3.select(`[id="btn-${row.id_to_concrete}"]`)
+          .text(d => d.id_concreted == null ? 'o' : 'x');
         return;
       }
     }
@@ -73,7 +76,9 @@
   function setupConcretize(d) {
     if (!d.parent_to_concrete) return;
     d3.select(this).append('div').classed('concretize', true)
-      .append('button').text(d => d.id_concreted == null ? 'o' : 'x')
+      .append('button')
+      .attr('id', d => `btn-${d.id_to_concrete}`)
+      .text(d => d.id_concreted == null ? 'o' : 'x')
       .on('click', (d) => {
         var req;
         if (d.id_concreted == null) {
