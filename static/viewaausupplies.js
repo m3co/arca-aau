@@ -106,10 +106,10 @@
     }, 300);
   }
 
-  function setupEntry(idkey, key) {
+  function setupEntry(idkey, key, module, query = 'update', row = null) {
   return function redact(selection) {
     selection.attr('column', key)
-      .append('span').text(d => d[key])
+      .append('span').text(d => d[key] ? d[key] : '-')
       .on('click', () => {
         var e = d3.event;
         var span = e.target;
@@ -127,12 +127,18 @@
         var fd = new FormData(form);
         var entry = fd.toJSON();
 
-        if (entry.value != d[entry.key]) {
-          entry.value = [entry.value];
-          entry.key = [entry.key];
-          entry.query = 'update';
-          entry.module = 'viewAAUSupplies';
-          client.emit('data', entry);
+        if (query == 'update') {
+          if (entry.value != d[entry.key]) {
+            entry.value = [entry.value];
+            entry.key = [entry.key];
+            entry.query = query;
+            entry.module = module;
+
+            client.emit('data', entry);
+          }
+        } else if (query == 'insert') {
+          row[entry.key] = entry.value;
+          console.log('to create', entry, row);
         }
 
         var span = form.previousElementSibling;
@@ -190,9 +196,9 @@
     tr = table.append('tr')
       .classed('first', true);
     tr.append('td').text(d => d.AAU_id);
-    tr.append('td').call(setupEntry('id', 'AAU_unit'));
-    tr.append('td').call(setupEntry('id', 'AAU_cost'));
-    tr.append('td').call(setupEntry('id', 'AAU_qop'));
+    tr.append('td').call(setupEntry('id', 'AAU_unit', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'AAU_cost', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'AAU_qop', 'viewAAUSupplies'));
     tr = table.append('tr')
       .classed('second', true);
 
@@ -203,7 +209,7 @@
     tr.append('td').attr('colspan', 4)
       .call(setupEntry('id', 'AAU_information'));
 
-    table = apu.append('table');
+    table = apu.append('table').classed('apusupplies', true);
     tr = table.selectAll('thead')
       .data(['thead']).enter()
       .append('tr');
@@ -215,17 +221,40 @@
     tr.append('th').text('');
 
     tr = table.selectAll('tbody tr.aausupply')
-      .data(d => d.AAUSupplies)
-      .enter().append('tbody').append('tr').classed('aausupply', true);
+      .data(d => d.AAUSupplies);
 
-    tr.append('td').call(setupEntry('id', 'Supplies_type'));
-    tr.append('td').call(setupEntry('id', 'Supplies_description'));
-    tr.append('td').call(setupEntry('id', 'Supplies_unit'));
-    tr.append('td').call(setupEntry('id', 'Supplies_cost'));
-    tr.append('td').call(setupEntry('id', 'AAUSupplies_qop'));
-    tr.append('td').append('button').text('-');
+    tr.exit().remove();
+    tr = tr.enter().append('tbody').append('tr').classed('aausupply', true);
 
-    apu.append('button').text('+');
+    tr.append('td').call(setupEntry('id', 'Supplies_type', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'Supplies_description', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'Supplies_unit', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'Supplies_cost', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'AAUSupplies_qop', 'viewAAUSupplies'));
+    tr.append('td').append('button').text('-')
+      .on('click', d => {
+        console.log(d, 'eliminar');
+      });
+
+    apu.append('button').text('+').on('click', (d, i, m) => {
+      var row = {
+        AAUSupplies_qop: null,
+        AAUSupplies_AAUId: d.AAU_id,
+        AAUSupplies_SupplyId: null,
+      };
+
+      var tr = d3.select(m[i].parentElement)
+        .select('table.apusupplies tbody')
+        .selectAll('tr.new').data([row])
+        .enter().append('tr').classed('new', true);
+      tr.append('td').text('-');
+      tr.append('td').text('-');
+      tr.append('td').text('-');
+      tr.append('td').text('-');
+      tr.append('td')
+        .call(setupEntry('id', 'AAUSupplies_qop',
+          'AAUSupplies', 'insert', row));
+    });
     apu.append('button').text('Importar');
 
   }
