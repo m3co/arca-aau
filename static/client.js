@@ -44,6 +44,10 @@
           viewaausupplies.doselect(data.row);
         } else if (query == 'update') {
           viewaausupplies.doupdate(data.row);
+        } else if (query == 'insert') {
+          viewaausupplies.doinsert(data.row);
+        } else if (query == 'delete') {
+          viewaausupplies.dodelete(data.row);
         } else {
           console.log('sin procesar viewAAUSupplies', data);
         }

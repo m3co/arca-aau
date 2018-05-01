@@ -6,6 +6,25 @@
   var blocks = {};
   window.blocks = blocks;
 
+  function dodelete(row) {
+    var AAU = blocks[row.AAU_id];
+    if (!AAU) return;
+    delete blocks[row.AAU_id];
+
+    if (lastSTO) {
+      clearTimeout(lastSTO);
+    }
+    lastSTO = setTimeout(() => {
+      render();
+    }, 300);
+  }
+
+  function doinsert(row) {
+    if (row.AAU_id.indexOf(blocks[SymId]) == 0) {
+      doselect(row);
+    }
+  }
+
   function doupdate(row) {
     var AAU = blocks[row.AAU_id];
     if (!AAU) return;
@@ -164,6 +183,7 @@
     tr.select('td[column="Supplies_qop"] span').text(d => d.Supplies_qop);
     tr.select('td[column="AAUSupplies_qop"] span').text(d => d.AAUSupplies_qop);
 
+    apu.exit().remove();
     var apu = apu.enter().append('div').classed('block', true);
 
     table = apu.append('table');
@@ -207,6 +227,7 @@
 
     apu.append('button').text('+');
     apu.append('button').text('Importar');
+
   }
 
   function request(d) {
@@ -214,6 +235,7 @@
       delete blocks[key];
     });
     d3.select('div.blocks').html('');
+    blocks[SymId] = d.id_to_concrete;
     client.emit('data', {
       query: 'select',
       module: 'viewAAUSupplies',
@@ -222,8 +244,10 @@
   }
 
   window.viewaausupplies = {
+    doinsert: doinsert,
     doselect: doselect,
     doupdate: doupdate,
+    dodelete: dodelete,
     request: request
   };
 })();
