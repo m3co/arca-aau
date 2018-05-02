@@ -254,6 +254,11 @@
     });
     tr.append('td')
       .call(function(selection) {
+      selection.append('span').text(d => d.Supplies_description)
+        .on('click', d => {
+          d3.event.target.hidden = true;
+          d3.event.target.nextElementSibling.nextElementSibling.style.display = '';
+        });
       var dl = selection.append('datalist').attr('id', d => `list-${d[SymId]}`);
       dl.append('option')
         .attr('value', d => d.Supplies_id)
@@ -264,8 +269,20 @@
         .on('click', () => {
           d3.event.target.select();
         })
+        .each(function() {
+          this.style.display = 'none';
+        })
         .on('change', d => {
-          console.log('changing this', d3.event.target.value);
+          d3.event.target.style.display = 'none';
+          d3.event.target.previousElementSibling.previousElementSibling.hidden = false;
+          console.log('data', {
+            query: 'update',
+            module: 'viewAAUSupplies',
+            idkey: 'id',
+            id: d[SymId],
+            key: ['Supplies_type'],
+            value: [d3.event.target.value]
+          });
         })
         .on('keyup', d => {
           client.emit('data', {
@@ -276,7 +293,6 @@
             value: d3.event.target.value
           });
         });
-      //selection.append('span').text(d => d.Supplies_description);
     });
     tr.append('td')
       .call(setupEntry('id', 'Supplies_unit', 'viewAAUSupplies'));
