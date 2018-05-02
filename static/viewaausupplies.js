@@ -129,7 +129,7 @@
 
         if (query == 'update') {
           if (entry.value != d[entry.key]) {
-            entry.value = [entry.value];
+            entry.value = [entry.value.toString().trim()];
             entry.key = [entry.key];
             entry.query = query;
             entry.module = module;
