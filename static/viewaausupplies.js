@@ -253,7 +253,28 @@
         });
     });
     tr.append('td')
-      .call(setupEntry('id', 'Supplies_description', 'viewAAUSupplies'));
+      .call(function(selection) {
+      var dl = selection.append('datalist').attr('id', d => `list-${d[SymId]}`);
+      dl.append('option')
+        .attr('value', d => d.Supplies_id)
+        .text(d => d.Supplies_description);
+      selection.append('input')
+        .attr('list', d => `list-${d[SymId]}`)
+        .attr('value', d => d.Supplies_id)
+        .on('click', () => {
+          d3.event.target.select();
+        })
+        .on('keyup', d => {
+          client.emit('data', {
+            query: 'search',
+            combo: `list-${d[SymId]}`,
+            module: 'Supplies',
+            key: 'description',
+            value: d3.event.target.value
+          });
+        });
+      //selection.append('span').text(d => d.Supplies_description);
+    });
     tr.append('td')
       .call(setupEntry('id', 'Supplies_unit', 'viewAAUSupplies'));
     tr.append('td')

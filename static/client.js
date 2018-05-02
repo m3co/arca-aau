@@ -21,11 +21,17 @@
       query: 'subscribe',
       module: 'viewAAUSupplies'
     });
+
+    client.emit('data', {
+      query: 'subscribe',
+      module: 'Supplies'
+    });
   });
 
   client.on('response', (data) => {
     var query = data.query;
     if (data.row) {
+      console.log(data.row);
       if (data.module == 'fnConcretizeAAU') {
         if (query == 'select' || query == 'insert') {
           tree.doselect(data.row);
