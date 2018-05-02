@@ -231,12 +231,16 @@
       selection.append('span').text(d => d.Supplies_type)
         .on('click', d => {
           d3.event.target.hidden = true;
-          d3.event.target.nextElementSibling.hidden = false;
+          d3.event.target.nextElementSibling.style.display = '';
         });
-      var sel = selection.append('select')
-        .attr('hidden', true)
-        .on('change', d => {
-          d3.event.target.hidden = true;
+      selection.append('input').classed('awesomplete', true)
+        .attr('list', 'Supplies_type')
+        .attr('value', d => d.Supplies_type)
+        .each(function() {
+          this.style.display = 'none';
+        })
+        .on('select', d => {
+          d3.event.target.style.display = 'none';
           d3.event.target.previousElementSibling.hidden = false;
           client.emit('data', {
             query: 'update',
@@ -247,30 +251,6 @@
             value: [d3.event.target.value]
           });
         });
-      sel.append('option')
-        .attr('value', 'Material')
-        .attr('selected', d => d.Supplies_type == 'Material' ? true : null)
-        .text('Material');
-      sel.append('option')
-        .attr('value', 'Mano de Obra')
-        .attr('selected', d => d.Supplies_type == 'Mano de Obra' ? true : null)
-        .text('Mano de Obra');
-      sel.append('option')
-        .attr('value', 'Equipo')
-        .attr('selected', d => d.Supplies_type == 'Equipo' ? true : null)
-        .text('Equipo');
-      sel.append('option')
-        .attr('value', 'Herramienta')
-        .attr('selected', d => d.Supplies_type == 'Herramienta' ? true : null)
-        .text('Herramienta');
-      sel.append('option')
-        .attr('value', 'Transporte')
-        .attr('selected', d => d.Supplies_type == 'Transporte' ? true : null)
-        .text('Transporte');
-      sel.append('option')
-        .attr('value', 'Subcontrato')
-        .attr('selected', d => d.Supplies_type == 'Subcontrato' ? true : null)
-        .text('Subcontrato');
     });
     tr.append('td')
       .call(setupEntry('id', 'Supplies_description', 'viewAAUSupplies'));
