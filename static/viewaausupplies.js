@@ -239,7 +239,7 @@
         .each(function() {
           this.style.display = 'none';
         })
-        .on('select', d => {
+        .on('change', d => {
           d3.event.target.style.display = 'none';
           d3.event.target.previousElementSibling.hidden = false;
           client.emit('data', {
@@ -263,6 +263,9 @@
         .attr('value', d => d.Supplies_id)
         .on('click', () => {
           d3.event.target.select();
+        })
+        .on('change', d => {
+          console.log('changing this', d3.event.target.value);
         })
         .on('keyup', d => {
           client.emit('data', {
