@@ -109,7 +109,7 @@
   function setupEntry(idkey, key, module, query = 'update', row = null) {
   return function redact(selection) {
     selection.attr('column', key)
-      .append('span').text(d => d[key] ? d[key] : '-')
+      .append('span').text(d => d[key] ? d[key].toString().trim() : '-')
       .on('click', () => {
         var e = d3.event;
         var span = e.target;
