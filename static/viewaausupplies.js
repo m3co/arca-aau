@@ -226,8 +226,27 @@
     tr.exit().remove();
     tr = tr.enter().append('tbody').append('tr').classed('aausupply', true);
 
-    tr.append('td').call(function(selection) {
-      var sel = selection.append('select');
+    tr.append('td').attr('column', 'Supplies_type')
+      .call(function(selection) {
+      selection.append('span').text(d => d.Supplies_type)
+        .on('click', d => {
+          d3.event.target.hidden = true;
+          d3.event.target.nextElementSibling.hidden = false;
+        });
+      var sel = selection.append('select')
+        .attr('hidden', true)
+        .on('change', d => {
+          d3.event.target.hidden = true;
+          d3.event.target.previousElementSibling.hidden = false;
+          client.emit('data', {
+            query: 'update',
+            module: 'viewAAUSupplies',
+            idkey: 'id',
+            id: d[SymId],
+            key: ['Supplies_type'],
+            value: [d3.event.target.value]
+          });
+        });
       sel.append('option')
         .attr('value', 'Material')
         .attr('selected', d => d.Supplies_type == 'Material' ? true : null)
