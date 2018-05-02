@@ -30,8 +30,12 @@
 
   client.on('response', (data) => {
     var query = data.query;
+    if (query == 'search') {
+      if (data.module == 'Supplies') {
+        viewaausupplies.dosearch(data);
+      }
+    }
     if (data.row) {
-      console.log(data.row);
       if (data.module == 'fnConcretizeAAU') {
         if (query == 'select' || query == 'insert') {
           tree.doselect(data.row);

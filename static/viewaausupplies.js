@@ -323,11 +323,16 @@
     });
   }
 
+  function dosearch(res) {
+    console.log('doing search', res);
+  }
+
   window.viewaausupplies = {
     doinsert: doinsert,
     doselect: doselect,
     doupdate: doupdate,
     dodelete: dodelete,
+    dosearch: dosearch,
     request: request
   };
 })();
