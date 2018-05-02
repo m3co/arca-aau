@@ -267,7 +267,7 @@
         .on('keyup', d => {
           client.emit('data', {
             query: 'search',
-            combo: `list-${d[SymId]}`,
+            combo: d3.event.target.getAttribute('list'),
             module: 'Supplies',
             key: 'description',
             value: d3.event.target.value
@@ -324,7 +324,14 @@
   }
 
   function dosearch(res) {
-    console.log('doing search', res);
+    var opts = d3.select(`datalist[id="${res.combo}"]`)
+      .selectAll('option').data(res.rows);
+    opts.attr('value', d => d.id)
+      .text(d => d.description);
+    opts.enter().append('option')
+      .attr('value', d => d.id)
+      .text(d => d.description);
+    opts.exit().remove();
   }
 
   window.viewaausupplies = {
