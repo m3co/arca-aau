@@ -178,6 +178,25 @@
   }
   }
 
+  function updateAAUSupplies(tr) {
+    tr.select('td[column="Supplies_type"] span')
+      .text(d => d.Supplies_type);
+    tr.select('td[column="Supplies_description"] span')
+      .text(d => d.Supplies_description);
+    tr.select('td[column="Supplies_description"] datalist')
+      .attr('id', d => `list-${d.AAUSupplies_id}`);
+    tr.select('td[column="Supplies_description"] input')
+      .attr('list', d => `list-${d.AAUSupplies_id}`)
+      .attr('value', d => d.AAUSupplies_SupplyId);
+
+    tr.select('td[column="Supplies_unit"] span')
+      .text(d => d.Supplies_unit);
+    tr.select('td[column="Supplies_cost"] span')
+      .text(d => d.Supplies_cost);
+    tr.select('td[column="AAUSupplies_qop"] span')
+      .text(d => d.AAUSupplies_qop);
+  }
+
   function render() {
     var table;
     var tr;
@@ -199,23 +218,8 @@
     apu.select('td[column="AAU_information"] span').
       text(d => d.AAU_information ? d.AAU_information.toString().trim() : '-');
 
-    tr = apu.selectAll('tbody tr.aausupply')
-    tr.select('td[column="Supplies_type"] span')
-      .text(d => d.Supplies_type);
-    tr.select('td[column="Supplies_description"] span')
-      .text(d => d.Supplies_description);
-    tr.select('td[column="Supplies_description"] datalist')
-      .attr('id', d => `list-${d.AAUSupplies_id}`);
-    tr.select('td[column="Supplies_description"] input')
-      .attr('list', d => `list-${d.AAUSupplies_id}`)
-      .attr('value', d => d.AAUSupplies_SupplyId);
-
-    tr.select('td[column="Supplies_unit"] span')
-      .text(d => d.Supplies_unit);
-    tr.select('td[column="Supplies_qop"] span')
-      .text(d => d.Supplies_qop);
-    tr.select('td[column="AAUSupplies_qop"] span')
-      .text(d => d.AAUSupplies_qop);
+    apu.selectAll('tbody tr.aausupply')
+      .data(d => d.AAUSupplies).call(updateAAUSupplies);
 
     apu.exit().remove();
     var apu = apu.enter().append('div').classed('block', true);
@@ -250,6 +254,7 @@
 
     tr = table.selectAll('tbody tr.aausupply')
       .data(d => d.AAUSupplies);
+    tr.call(updateAAUSupplies);
 
     tr.exit().remove();
     tr = tr.enter().append('tbody').append('tr').classed('aausupply', true);
