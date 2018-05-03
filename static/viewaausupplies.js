@@ -343,7 +343,12 @@
     tr.append('td')
       .append('button').text('-')
       .on('click', d => {
-        console.log(d, 'eliminar');
+        client.emit('data', {
+          query: 'delete',
+          module: 'AAUSupplies',
+          id: d.AAUSupplies_id,
+          idkey: 'id'
+        });
       });
 
     apu.append('button').text('+').on('click', (d, i, m) => {
