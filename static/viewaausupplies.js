@@ -180,7 +180,7 @@
     tr.select('td[column="Supplies_type"] span')
       .text(d => d.Supplies_type);
     tr.select('td[column="Supplies_description"] span')
-      .text(d => d.Supplies_description);
+      .text(d => d.Supplies_description ? d.Supplies_description : '-');
     tr.select('td[column="Supplies_description"] datalist')
       .attr('id', d => `list-${d.AAUSupplies_id}`);
     tr.select('td[column="Supplies_description"] input')
@@ -188,11 +188,11 @@
       .attr('value', d => d.AAUSupplies_SupplyId);
 
     tr.select('td[column="Supplies_unit"] span')
-      .text(d => d.Supplies_unit);
+      .text(d => d.Supplies_unit ? d.Supplies_unit : '-');
     tr.select('td[column="Supplies_cost"] span')
-      .text(d => d.Supplies_cost);
+      .text(d => d.Supplies_cost ? d.Supplies_cost : '-');
     tr.select('td[column="AAUSupplies_qop"] span')
-      .text(d => d.AAUSupplies_qop);
+      .text(d => d.AAUSupplies_qop ? d.AAUSupplies_qop : '-');
 
     tr.select('td[column="Supplies_unit"] input[name="id"]')
       .attr('value', d => d.id);
