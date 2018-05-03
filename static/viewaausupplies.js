@@ -373,14 +373,35 @@
             var fd = new FormData(form);
             var row = fd.toJSON();
 
-            e.target.closest('tr.new').remove();
-            setTimeout(() => {
-              client.emit('data', {
-                query: 'insert',
-                row: row,
-                module: 'AAUSupplies'
-              });
-            }, 100);
+            if (row.SupplyId) {
+              if (parseInt(row.SupplyId) == row.SupplyId) {
+                e.target.closest('tr.new').remove();
+                setTimeout(() => {
+                  client.emit('data', {
+                    query: 'insert',
+                    row: row,
+                    module: 'AAUSupplies'
+                  });
+                }, 100);
+              } else {
+                e.target.closest('tr.new').remove();
+                setTimeout(() => {
+                client.emit('data', {
+                  query: 'insert',
+                  row: {
+                    type: 'Material',
+                    description: row.SupplyId,
+                    cost: 0,
+                    unit: ''
+                  },
+                  module: 'Supplies'
+                });
+                }, 100);
+              }
+            } else {
+              // do nothing
+              e.target.closest('tr.new').remove();
+            }
           });
 
         fr.append('input')
