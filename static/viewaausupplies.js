@@ -224,8 +224,10 @@
     apu.select('td[column="AAU_information"] span').
       text(d => d.AAU_information ? d.AAU_information.toString().trim() : '-');
 
-    apu.selectAll('tr.aausupply')
-      .data(d => d.AAUSupplies).call(updateAAUSupplies);
+    var tr = apu.selectAll('tr.aausupply')
+      .data(d => d.AAUSupplies);
+    tr.exit().remove();
+    tr.call(updateAAUSupplies);
 
     apu.exit().remove();
     var apu = apu.enter().append('div').classed('block', true);
@@ -260,9 +262,9 @@
 
     tr = table.selectAll('tr.aausupply')
       .data(d => d.AAUSupplies);
+    tr.exit().remove();
     tr.call(updateAAUSupplies);
 
-    tr.exit().remove();
     tr = tr.enter().append('tr').classed('aausupply', true);
 
     tr.append('td').attr('column', 'Supplies_type')
