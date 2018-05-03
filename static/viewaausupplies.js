@@ -29,6 +29,7 @@
   }
 
   function doinsert(row) {
+    console.log('do insert', row, blocks);
     if (row.AAU_id.indexOf(blocks[SymId]) == 0) {
       doselect(row);
     }
@@ -133,7 +134,7 @@
       .on('submit', (d) => {
         var e = d3.event;
         e.preventDefault();
-        var form = e.target;;
+        var form = e.target;
         var fd = new FormData(form);
         var entry = fd.toJSON();
 
@@ -223,7 +224,7 @@
     apu.select('td[column="AAU_information"] span').
       text(d => d.AAU_information ? d.AAU_information.toString().trim() : '-');
 
-    apu.selectAll('tbody tr.aausupply')
+    apu.selectAll('tr.aausupply')
       .data(d => d.AAUSupplies).call(updateAAUSupplies);
 
     apu.exit().remove();
@@ -257,12 +258,12 @@
     tr.append('th').text('Rdto');
     tr.append('th').text('');
 
-    tr = table.selectAll('tbody tr.aausupply')
+    tr = table.selectAll('tr.aausupply')
       .data(d => d.AAUSupplies);
     tr.call(updateAAUSupplies);
 
     tr.exit().remove();
-    tr = tr.enter().append('tbody').append('tr').classed('aausupply', true);
+    tr = tr.enter().append('tr').classed('aausupply', true);
 
     tr.append('td').attr('column', 'Supplies_type')
       .call(function(selection) {
@@ -327,7 +328,8 @@
             value: d3.event.target.value
           });
         });
-      var dl = selection.append('datalist').attr('id', d => `list-${d.AAUSupplies_id}`);
+      var dl = selection.append('datalist')
+        .attr('id', d => `list-${d.AAUSupplies_id}`);
       dl.append('option')
         .attr('value', d => d.Supplies_id)
         .text(d => d.Supplies_description);
@@ -345,23 +347,42 @@
       });
 
     apu.append('button').text('+').on('click', (d, i, m) => {
-      var row = {
-        AAUSupplies_qop: null,
-        AAUSupplies_AAUId: d.AAU_id,
-        AAUSupplies_SupplyId: null,
-      };
-
       var tr = d3.select(m[i].parentElement)
-        .select('table.apusupplies tbody')
-        .selectAll('tr.new').data([row])
+        .select('table.apusupplies')
+        .selectAll('tr.new').data([d])
         .enter().append('tr').classed('new', true);
       tr.append('td').text('-');
+      tr.append('td').call(function(selection) {
+        var fr = selection.append('form')
+          .on('submit', () => {
+            var e = d3.event;
+            e.preventDefault();
+            var form = e.target;
+            var fd = new FormData(form);
+            var row = fd.toJSON();
+
+            e.target.closest('tr.new').remove();
+            setTimeout(() => {
+              client.emit('data', {
+                query: 'insert',
+                row: row,
+                module: 'AAUSupplies'
+              });
+            }, 100);
+          });
+
+        fr.append('input')
+          .attr('name', 'SupplyId');
+
+        fr.append('input')
+          .attr('type', 'hidden')
+          .attr('value', d.AAU_id)
+          .attr('name', 'AAUId');
+
+      });
       tr.append('td').text('-');
       tr.append('td').text('-');
       tr.append('td').text('-');
-      tr.append('td')
-        .call(setupEntry('id', 'AAUSupplies_qop',
-          'AAUSupplies', 'insert', row));
     });
     apu.append('button').text('Importar');
 
