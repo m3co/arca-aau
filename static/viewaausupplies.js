@@ -138,14 +138,12 @@
         var entry = fd.toJSON();
 
         if (query == 'update') {
-          if (entry.value != d[entry.key]) {
-            entry.value = [entry.value.toString().trim()];
-            entry.key = [entry.key];
-            entry.query = query;
-            entry.module = module;
+          entry.value = [entry.value.toString().trim()];
+          entry.key = [entry.key];
+          entry.query = query;
+          entry.module = module;
 
-            client.emit('data', entry);
-          }
+          client.emit('data', entry);
         } else if (query == 'insert') {
           row[entry.key] = entry.value;
           console.log('to create', entry, row);
@@ -168,7 +166,7 @@
 
     fr.append('input')
       .attr('type', 'hidden')
-      .attr('value', d => d.id)
+      .attr('value', d => d[idkey])
       .attr('name', 'id');
 
     fr.append('input')
