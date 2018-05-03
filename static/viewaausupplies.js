@@ -193,6 +193,13 @@
       .text(d => d.Supplies_cost);
     tr.select('td[column="AAUSupplies_qop"] span')
       .text(d => d.AAUSupplies_qop);
+
+    tr.select('td[column="Supplies_unit"] input[name="id"]')
+      .attr('value', d => d.id);
+    tr.select('td[column="Supplies_cost"] input[name="id"]')
+      .attr('value', d => d.id);
+    tr.select('td[column="AAUSupplies_qop"] input[name="id"]')
+      .attr('value', d => d.id);
   }
 
   function render() {
