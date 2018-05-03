@@ -315,7 +315,9 @@
       .data(d => d.AAUSupplies);
     tr.exit().remove();
     tr.call(updateAAUSupplies);
-    tr.enter().select('table.apusupplies').call(insertSupplies);
+    tr.enter().select('table.apusupplies')
+      .append('tr').classed('aausupply', true)
+      .call(insertSupplies);
 
     apu.exit().remove();
     var apu = apu.enter().append('div').classed('block', true);
@@ -382,13 +384,28 @@
           });
 
         fr.append('input')
-          .attr('name', 'SupplyId');
+          .attr('name', 'SupplyId')
+          .attr('list', d => `list-new`)
+          .on('keyup', d => {
+            client.emit('data', {
+              query: 'search',
+              combo: d3.event.target.getAttribute('list'),
+              module: 'Supplies',
+              key: 'description',
+              value: d3.event.target.value
+            });
+          });
 
         fr.append('input')
           .attr('type', 'hidden')
           .attr('value', d.AAU_id)
           .attr('name', 'AAUId');
 
+        var dl = selection.append('datalist')
+          .attr('id', d => `list-new`);
+        dl.append('option')
+          .attr('value', d => d.Supplies_id)
+          .text(d => d.Supplies_description);
       });
       tr.append('td').text('-');
       tr.append('td').text('-');
