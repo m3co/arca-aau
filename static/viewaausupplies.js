@@ -183,11 +183,22 @@
     apu.select('td[column="AAU_information"] span').text(d => d.AAU_information);
 
     tr = apu.selectAll('tbody tr.aausupply')
-    tr.select('td[column="Supplies_type"] span').text(d => d.Supplies_type);
-    tr.select('td[column="Supplies_description"] span').text(d => d.Supplies_description);
-    tr.select('td[column="Supplies_unit"] span').text(d => d.Supplies_unit);
-    tr.select('td[column="Supplies_qop"] span').text(d => d.Supplies_qop);
-    tr.select('td[column="AAUSupplies_qop"] span').text(d => d.AAUSupplies_qop);
+    tr.select('td[column="Supplies_type"] span')
+      .text(d => d.Supplies_type);
+    tr.select('td[column="Supplies_description"] span')
+      .text(d => d.Supplies_description);
+    tr.select('td[column="Supplies_description"] datalist')
+      .attr('id', d => `list-${d[SymId]}`);
+    tr.select('td[column="Supplies_description"] input')
+      .attr('list', d => `list-${d[SymId]}`)
+      .attr('value', d => d.AAUSupplies_SupplyId);
+
+    tr.select('td[column="Supplies_unit"] span')
+      .text(d => d.Supplies_unit);
+    tr.select('td[column="Supplies_qop"] span')
+      .text(d => d.Supplies_qop);
+    tr.select('td[column="AAUSupplies_qop"] span')
+      .text(d => d.AAUSupplies_qop);
 
     apu.exit().remove();
     var apu = apu.enter().append('div').classed('block', true);
@@ -252,20 +263,16 @@
           });
         });
     });
-    tr.append('td')
+    tr.append('td').attr('column', 'Supplies_description')
       .call(function(selection) {
       selection.append('span').text(d => d.Supplies_description)
         .on('click', d => {
           d3.event.target.hidden = true;
-          d3.event.target.nextElementSibling.nextElementSibling.style.display = '';
+          d3.event.target.nextElementSibling.style.display = '';
         });
-      var dl = selection.append('datalist').attr('id', d => `list-${d[SymId]}`);
-      dl.append('option')
-        .attr('value', d => d.Supplies_id)
-        .text(d => d.Supplies_description);
       selection.append('input')
         .attr('list', d => `list-${d[SymId]}`)
-        .attr('value', d => d.Supplies_id)
+        .attr('value', d => d.AAUSupplies_SupplyId)
         .on('click', () => {
           d3.event.target.select();
         })
@@ -274,13 +281,13 @@
         })
         .on('change', d => {
           d3.event.target.style.display = 'none';
-          d3.event.target.previousElementSibling.previousElementSibling.hidden = false;
-          console.log('data', {
+          d3.event.target.previousElementSibling.hidden = false;
+          client.emit('data', {
             query: 'update',
             module: 'viewAAUSupplies',
             idkey: 'id',
             id: d[SymId],
-            key: ['Supplies_type'],
+            key: ['AAUSupplies_SupplyId'],
             value: [d3.event.target.value]
           });
         })
@@ -293,6 +300,10 @@
             value: d3.event.target.value
           });
         });
+      var dl = selection.append('datalist').attr('id', d => `list-${d[SymId]}`);
+      dl.append('option')
+        .attr('value', d => d.Supplies_id)
+        .text(d => d.Supplies_description);
     });
     tr.append('td')
       .call(setupEntry('id', 'Supplies_unit', 'viewAAUSupplies'));
