@@ -29,7 +29,6 @@
   }
 
   function doinsert(row) {
-    console.log('do insert', row, blocks);
     if (row.AAU_id.indexOf(blocks[SymId]) == 0) {
       doselect(row);
     }
@@ -203,70 +202,7 @@
       .attr('value', d => d.id);
   }
 
-  function render() {
-    var table;
-    var tr;
-
-    var apu = d3.select('div.blocks')
-      .selectAll('div.block')
-      .data(Object.keys(blocks).map(key => blocks[key]));
-
-    apu.select('td[column="AAU_id"] span')
-      .text(d => d.AAU_id);
-    apu.select('td[column="AAU_unit"] span').
-      text(d => d.AAU_unit ? d.AAU_unit.toString().trim() : '-');
-    apu.select('td[column="AAU_cost"] span').
-      text(d => d.AAU_cost ? d.AAU_cost.toString().trim() : '-');
-    apu.select('td[column="AAU_qop"] span').
-      text(d => d.AAU_qop ? d.AAU_qop.toString().trim() : '-');
-    apu.select('td[column="AAU_description"] span').
-      text(d => d.AAU_description ? d.AAU_description.toString().trim() : '-');
-    apu.select('td[column="AAU_information"] span').
-      text(d => d.AAU_information ? d.AAU_information.toString().trim() : '-');
-
-    var tr = apu.selectAll('tr.aausupply')
-      .data(d => d.AAUSupplies);
-    tr.exit().remove();
-    tr.call(updateAAUSupplies);
-
-    apu.exit().remove();
-    var apu = apu.enter().append('div').classed('block', true);
-
-    table = apu.append('table');
-    tr = table.append('tr')
-      .classed('first', true);
-    tr.append('td').text(d => d.AAU_id).attr('column', 'AAU_id');
-    tr.append('td').call(setupEntry('id', 'AAU_unit', 'viewAAUSupplies'));
-    tr.append('td').call(setupEntry('id', 'AAU_cost', 'viewAAUSupplies'));
-    tr.append('td').call(setupEntry('id', 'AAU_qop', 'viewAAUSupplies'));
-    tr = table.append('tr')
-      .classed('second', true);
-
-    tr.append('td').attr('colspan', 4)
-      .call(setupEntry('id', 'AAU_description', 'viewAAUSupplies'));
-
-    tr = table.append('tr');
-    tr.append('td').attr('colspan', 4)
-      .call(setupEntry('id', 'AAU_information', 'viewAAUSupplies'));
-
-    table = apu.append('table').classed('apusupplies', true);
-    tr = table.selectAll('thead')
-      .data(['thead']).enter()
-      .append('tr');
-    tr.append('th').text('Tipo');
-    tr.append('th').text('Descripcion');
-    tr.append('th').text('Unidad');
-    tr.append('th').text('Costo');
-    tr.append('th').text('Rdto');
-    tr.append('th').text('');
-
-    tr = table.selectAll('tr.aausupply')
-      .data(d => d.AAUSupplies);
-    tr.exit().remove();
-    tr.call(updateAAUSupplies);
-
-    tr = tr.enter().append('tr').classed('aausupply', true);
-
+  function insertSupplies(tr) {
     tr.append('td').attr('column', 'Supplies_type')
       .call(function(selection) {
       selection.append('span').text(d => d.Supplies_type)
@@ -352,6 +288,73 @@
           idkey: 'id'
         });
       });
+  }
+
+  function render() {
+    var table;
+    var tr;
+
+    var apu = d3.select('div.blocks')
+      .selectAll('div.block')
+      .data(Object.keys(blocks).map(key => blocks[key]));
+
+    apu.select('td[column="AAU_id"] span')
+      .text(d => d.AAU_id);
+    apu.select('td[column="AAU_unit"] span').
+      text(d => d.AAU_unit ? d.AAU_unit.toString().trim() : '-');
+    apu.select('td[column="AAU_cost"] span').
+      text(d => d.AAU_cost ? d.AAU_cost.toString().trim() : '-');
+    apu.select('td[column="AAU_qop"] span').
+      text(d => d.AAU_qop ? d.AAU_qop.toString().trim() : '-');
+    apu.select('td[column="AAU_description"] span').
+      text(d => d.AAU_description ? d.AAU_description.toString().trim() : '-');
+    apu.select('td[column="AAU_information"] span').
+      text(d => d.AAU_information ? d.AAU_information.toString().trim() : '-');
+
+    var tr = apu.selectAll('tr.aausupply')
+      .data(d => d.AAUSupplies);
+    tr.exit().remove();
+    tr.call(updateAAUSupplies);
+    tr.enter().select('table.apusupplies').call(insertSupplies);
+
+    apu.exit().remove();
+    var apu = apu.enter().append('div').classed('block', true);
+
+    table = apu.append('table');
+    tr = table.append('tr')
+      .classed('first', true);
+    tr.append('td').text(d => d.AAU_id).attr('column', 'AAU_id');
+    tr.append('td').call(setupEntry('id', 'AAU_unit', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'AAU_cost', 'viewAAUSupplies'));
+    tr.append('td').call(setupEntry('id', 'AAU_qop', 'viewAAUSupplies'));
+    tr = table.append('tr')
+      .classed('second', true);
+
+    tr.append('td').attr('colspan', 4)
+      .call(setupEntry('id', 'AAU_description', 'viewAAUSupplies'));
+
+    tr = table.append('tr');
+    tr.append('td').attr('colspan', 4)
+      .call(setupEntry('id', 'AAU_information', 'viewAAUSupplies'));
+
+    table = apu.append('table').classed('apusupplies', true);
+    tr = table.selectAll('thead')
+      .data(['thead']).enter()
+      .append('tr');
+    tr.append('th').text('Tipo');
+    tr.append('th').text('Descripcion');
+    tr.append('th').text('Unidad');
+    tr.append('th').text('Costo');
+    tr.append('th').text('Rdto');
+    tr.append('th').text('');
+
+    tr = table.selectAll('tr.aausupply')
+      .data(d => d.AAUSupplies);
+    tr.exit().remove();
+    tr.call(updateAAUSupplies);
+
+    tr = tr.enter().append('tr').classed('aausupply', true);
+    tr.call(insertSupplies);
 
     apu.append('button').text('+').on('click', (d, i, m) => {
       var tr = d3.select(m[i].parentElement)
