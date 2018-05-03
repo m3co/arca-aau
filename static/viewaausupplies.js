@@ -79,6 +79,9 @@
       };
     }
     var AAU = blocks[row.AAU_id];
+    if (!AAU.id) {
+      AAU.id = row.id;
+    }
     AAU.AAU_id = row.AAU_id;
     AAU.AAU_qop = row.AAU_qop;
     AAU.AAU_unit = row.AAU_unit;
@@ -183,11 +186,18 @@
       .selectAll('div.block')
       .data(Object.keys(blocks).map(key => blocks[key]));
 
-    apu.select('td[column="AAU_unit"] span').text(d => d.AAU_unit);
-    apu.select('td[column="AAU_cost"] span').text(d => d.AAU_cost);
-    apu.select('td[column="AAU_qop"] span').text(d => d.AAU_qop);
-    apu.select('td[column="AAU_description"] span').text(d => d.AAU_description);
-    apu.select('td[column="AAU_information"] span').text(d => d.AAU_information);
+    apu.select('td[column="AAU_id"] span')
+      .text(d => d.AAU_id);
+    apu.select('td[column="AAU_unit"] span').
+      text(d => d.AAU_unit ? d.AAU_unit.toString().trim() : '-');
+    apu.select('td[column="AAU_cost"] span').
+      text(d => d.AAU_cost ? d.AAU_cost.toString().trim() : '-');
+    apu.select('td[column="AAU_qop"] span').
+      text(d => d.AAU_qop ? d.AAU_qop.toString().trim() : '-');
+    apu.select('td[column="AAU_description"] span').
+      text(d => d.AAU_description ? d.AAU_description.toString().trim() : '-');
+    apu.select('td[column="AAU_information"] span').
+      text(d => d.AAU_information ? d.AAU_information.toString().trim() : '-');
 
     tr = apu.selectAll('tbody tr.aausupply')
     tr.select('td[column="Supplies_type"] span')
@@ -213,7 +223,7 @@
     table = apu.append('table');
     tr = table.append('tr')
       .classed('first', true);
-    tr.append('td').text(d => d.AAU_id);
+    tr.append('td').text(d => d.AAU_id).attr('column', 'AAU_id');
     tr.append('td').call(setupEntry('id', 'AAU_unit', 'viewAAUSupplies'));
     tr.append('td').call(setupEntry('id', 'AAU_cost', 'viewAAUSupplies'));
     tr.append('td').call(setupEntry('id', 'AAU_qop', 'viewAAUSupplies'));
@@ -221,11 +231,11 @@
       .classed('second', true);
 
     tr.append('td').attr('colspan', 4)
-      .call(setupEntry('id', 'AAU_description'));
+      .call(setupEntry('id', 'AAU_description', 'viewAAUSupplies'));
 
     tr = table.append('tr');
     tr.append('td').attr('colspan', 4)
-      .call(setupEntry('id', 'AAU_information'));
+      .call(setupEntry('id', 'AAU_information', 'viewAAUSupplies'));
 
     table = apu.append('table').classed('apusupplies', true);
     tr = table.selectAll('thead')
