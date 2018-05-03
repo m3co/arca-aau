@@ -9,7 +9,16 @@
   function dodelete(row) {
     var AAU = blocks[row.AAU_id];
     if (!AAU) return;
-    delete blocks[row.AAU_id];
+    var found = blocks[row.AAU_id].AAUSupplies
+      .find(d => d.AAUSupplies_id == row.AAUSupplies_id);
+    if (found) {
+      blocks[row.AAU_id].AAUSupplies
+        .splice(blocks[row.AAU_id].AAUSupplies
+          .findIndex(d => d.AAUSupplies_id == row.AAUSupplies_id), 1);
+    } else {
+      // ESTO AUN ESTA POR RESOLVERSE...
+      delete blocks[row.AAU_id];
+    }
 
     if (lastSTO) {
       clearTimeout(lastSTO);
@@ -28,7 +37,6 @@
   function doupdate(row) {
     var AAU = blocks[row.AAU_id];
     if (!AAU) return;
-    AAU[SymId] = row.id;
     AAU.AAU_id = row.AAU_id;
     AAU.AAU_qop = row.AAU_qop;
     AAU.AAU_unit = row.AAU_unit;
@@ -71,7 +79,6 @@
       };
     }
     var AAU = blocks[row.AAU_id];
-    AAU[SymId] = row.id;
     AAU.AAU_id = row.AAU_id;
     AAU.AAU_qop = row.AAU_qop;
     AAU.AAU_unit = row.AAU_unit;
@@ -81,7 +88,7 @@
     AAU.AAU_information = row.AAU_information;
 
     var AAUSupply = {};
-    AAUSupply[SymId] = row.id;
+    AAUSupply.id = row.id;
     AAUSupply.AAUSupplies_id = row.AAUSupplies_id;
     AAUSupply.AAUSupplies_qop = row.AAUSupplies_qop;
     AAUSupply.AAUSupplies_AAUId = row.AAUSupplies_AAUId;
@@ -158,7 +165,7 @@
 
     fr.append('input')
       .attr('type', 'hidden')
-      .attr('value', d => d[SymId])
+      .attr('value', d => d.id)
       .attr('name', 'id');
 
     fr.append('input')
@@ -188,9 +195,9 @@
     tr.select('td[column="Supplies_description"] span')
       .text(d => d.Supplies_description);
     tr.select('td[column="Supplies_description"] datalist')
-      .attr('id', d => `list-${d[SymId]}`);
+      .attr('id', d => `list-${d.AAUSupplies_id}`);
     tr.select('td[column="Supplies_description"] input')
-      .attr('list', d => `list-${d[SymId]}`)
+      .attr('list', d => `list-${d.AAUSupplies_id}`)
       .attr('value', d => d.AAUSupplies_SupplyId);
 
     tr.select('td[column="Supplies_unit"] span')
@@ -257,7 +264,7 @@
             query: 'update',
             module: 'viewAAUSupplies',
             idkey: 'id',
-            id: d[SymId],
+            id: d.id,
             key: ['Supplies_type'],
             value: [d3.event.target.value]
           });
@@ -271,7 +278,7 @@
           d3.event.target.nextElementSibling.style.display = '';
         });
       selection.append('input')
-        .attr('list', d => `list-${d[SymId]}`)
+        .attr('list', d => `list-${d.AAUSupplies_id}`)
         .attr('value', d => d.AAUSupplies_SupplyId)
         .on('click', () => {
           d3.event.target.select();
@@ -286,7 +293,7 @@
             query: 'update',
             module: 'viewAAUSupplies',
             idkey: 'id',
-            id: d[SymId],
+            id: d.id,
             key: ['AAUSupplies_SupplyId'],
             value: [d3.event.target.value]
           });
@@ -300,7 +307,7 @@
             value: d3.event.target.value
           });
         });
-      var dl = selection.append('datalist').attr('id', d => `list-${d[SymId]}`);
+      var dl = selection.append('datalist').attr('id', d => `list-${d.AAUSupplies_id}`);
       dl.append('option')
         .attr('value', d => d.Supplies_id)
         .text(d => d.Supplies_description);
