@@ -386,16 +386,16 @@
               } else {
                 e.target.closest('tr.new').remove();
                 setTimeout(() => {
-                client.emit('data', {
-                  query: 'insert',
-                  row: {
-                    type: 'Material',
-                    description: row.SupplyId,
-                    cost: 0,
-                    unit: ''
-                  },
-                  module: 'Supplies'
-                });
+                  client.emit('data', {
+                    query: 'insert',
+                    row: {
+                      type: 'Material',
+                      description: row.SupplyId,
+                      cost: 0,
+                      unit: ''
+                    },
+                    module: 'Supplies'
+                  });
                 }, 100);
               }
             } else {
@@ -407,6 +407,12 @@
         fr.append('input')
           .attr('name', 'SupplyId')
           .attr('list', d => `list-new`)
+          .on('change', d => {
+            var v = d3.event.target.value;
+            if (parseInt(v) == v) {
+              d3.event.target.parentElement.dispatchEvent(new Event('submit'));
+            }
+          })
           .on('keyup', d => {
             client.emit('data', {
               query: 'search',
