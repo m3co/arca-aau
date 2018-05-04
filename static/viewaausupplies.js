@@ -294,35 +294,35 @@
     var table;
     var tr;
 
-    var apu = d3.select('div.blocks')
+    var aau = d3.select('div.blocks')
       .selectAll('div.block')
       .data(Object.keys(blocks).map(key => blocks[key]));
 
-    apu.select('td[column="AAU_id"] span')
+    aau.select('td[column="AAU_id"] span')
       .text(d => d.AAU_id);
-    apu.select('td[column="AAU_unit"] span').
+    aau.select('td[column="AAU_unit"] span').
       text(d => d.AAU_unit ? d.AAU_unit.toString().trim() : '-');
-    apu.select('td[column="AAU_cost"] span').
+    aau.select('td[column="AAU_cost"] span').
       text(d => d.AAU_cost ? d.AAU_cost.toString().trim() : '-');
-    apu.select('td[column="AAU_qop"] span').
+    aau.select('td[column="AAU_qop"] span').
       text(d => d.AAU_qop ? d.AAU_qop.toString().trim() : '-');
-    apu.select('td[column="AAU_description"] span').
+    aau.select('td[column="AAU_description"] span').
       text(d => d.AAU_description ? d.AAU_description.toString().trim() : '-');
-    apu.select('td[column="AAU_information"] span').
+    aau.select('td[column="AAU_information"] span').
       text(d => d.AAU_information ? d.AAU_information.toString().trim() : '-');
 
-    var tr = apu.selectAll('tr.aausupply')
+    var tr = aau.selectAll('tr.aausupply')
       .data(d => d.AAUSupplies);
     tr.exit().remove();
     tr.call(updateAAUSupplies);
-    tr.enter().select('table.apusupplies')
+    tr.enter().select('table.aausupplies')
       .append('tr').classed('aausupply', true)
       .call(insertSupplies);
 
-    apu.exit().remove();
-    var apu = apu.enter().append('div').classed('block', true);
+    aau.exit().remove();
+    var aau = aau.enter().append('div').classed('block', true);
 
-    table = apu.append('table');
+    table = aau.append('table');
     tr = table.append('tr')
       .classed('first', true);
     tr.append('td').text(d => d.AAU_id).attr('column', 'AAU_id');
@@ -339,7 +339,7 @@
     tr.append('td').attr('colspan', 4)
       .call(setupEntry('id', 'AAU_information', 'viewAAUSupplies'));
 
-    table = apu.append('table').classed('apusupplies', true);
+    table = aau.append('table').classed('aausupplies', true);
     tr = table.selectAll('thead')
       .data(['thead']).enter()
       .append('tr');
@@ -358,9 +358,9 @@
     tr = tr.enter().append('tr').classed('aausupply', true);
     tr.call(insertSupplies);
 
-    apu.append('button').text('+').on('click', (d, i, m) => {
+    aau.append('button').text('+').on('click', (d, i, m) => {
       var tr = d3.select(m[i].parentElement)
-        .select('table.apusupplies')
+        .select('table.aausupplies')
         .selectAll('tr.new').data([d])
         .enter().append('tr').classed('new', true);
       tr.append('td').text('-');
@@ -438,10 +438,10 @@
       tr.append('td').text('-');
       tr.append('td').text('-');
     });
-    apu.append('button').text('Importar')
+    aau.append('button').text('Importar')
       .on('click', d => {
-        document.querySelector('#import-apu input[name="APU"]').value = d.AAU_id;
-        document.querySelector('#import-apu').style.display = '';
+        document.querySelector('#import-aau-form input[name="AAU"]').value = d.AAU_id;
+        document.querySelector('#import-aau').style.display = '';
       });
 
   }
