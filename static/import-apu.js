@@ -30,21 +30,11 @@
       .attr('value', d => d.value);
   }
   var createRedactCell = {
-    type: s => {
-      var span = spanEmpty(s);
-      formAndInput(span, s)
-        .attr('list', 'Supplies_type');
-    },
-    description: s => {
-      var span = spanEmpty(s);
-      formAndInput(span, s);
-    },
-    unit: s => s.append('span')
-      .text(d => d.value ? d.value.toString().trim() : '-'),
-    cost: s => s.append('span')
-      .text(d => d.value ? d.value.toString().trim() : '-'),
-    qop: s => s.append('span')
-      .text(d => d.value ? d.value.toString().trim() : '-')
+    type: s => formAndInput(spanEmpty(s), s).attr('list', 'Supplies_type'),
+    description: s => formAndInput(spanEmpty(s), s),
+    unit: s => formAndInput(spanEmpty(s), s),
+    cost: s => formAndInput(spanEmpty(s), s),
+    qop: s => formAndInput(spanEmpty(s), s)
   };
   document.querySelector('#import-aau-close').addEventListener('click', e => {
     e.target.parentElement.style.display = 'none';
