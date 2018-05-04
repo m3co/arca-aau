@@ -438,7 +438,11 @@
       tr.append('td').text('-');
       tr.append('td').text('-');
     });
-    apu.append('button').text('Importar');
+    apu.append('button').text('Importar')
+      .on('click', d => {
+        document.querySelector('#import-apu input[name="APU"]').value = d.AAU_id;
+        document.querySelector('#import-apu').style.display = '';
+      });
 
   }
 
