@@ -71,8 +71,7 @@
       from: 'importAAUSupplies',
       row: d
     })).forEach(event => {
-      console.log(event);
-      //client.emit('data', event);
+      client.emit('data', event);
     });
     document.querySelector('#import-aau').style.display = 'none';
     document.querySelector('#paste-aau tbody').innerHTML = '';
