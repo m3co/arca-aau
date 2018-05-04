@@ -3,10 +3,11 @@
   var data = [];
   var COLUMNS = ['type', 'description', 'unit', 'cost', 'qop'];
   var createRedactCell = {
-    type: s => s.append('span').text(d => d.value),
+    type: s => s.append('span')
+      .text(d => d.value ? d.value.toString().trim() : '-'),
     description: s => {
       var span = s.append('span')
-        .text(d => d.value)
+        .text(d => d.value ? d.value.toString().trim() : '-')
         .on('click', d => {
           var e = d3.event;
           e.target.hidden = true;
@@ -29,9 +30,12 @@
         .attr('name', 'value')
         .attr('value', d => d.value);
     },
-    unit: s => s.append('span').text(d => d.value),
-    cost: s => s.append('span').text(d => d.value),
-    qop: s => s.append('span').text(d => d.value)
+    unit: s => s.append('span')
+      .text(d => d.value ? d.value.toString().trim() : '-'),
+    cost: s => s.append('span')
+      .text(d => d.value ? d.value.toString().trim() : '-'),
+    qop: s => s.append('span')
+      .text(d => d.value ? d.value.toString().trim() : '-')
   };
   document.querySelector('#import-aau-close').addEventListener('click', e => {
     e.target.parentElement.style.display = 'none';
