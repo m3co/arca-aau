@@ -42,10 +42,11 @@
   });
   function renderRow(selection) {
     var cols = selection.selectAll('td.col')
-      .data(d => Object.keys(d).map(c => ({
+      .data((d, i) => Object.keys(d).map(c => ({
         key: c,
         value: d[c],
-        original: d
+        original: d,
+        i: i
       })));
     cols.select('span').text(d => d.value);
     cols.select('input').attr('value', d => d.value);
