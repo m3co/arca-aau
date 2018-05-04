@@ -11,45 +11,33 @@
         e.target.nextElementSibling.hidden = false;
       });
   }
+  function formAndInput(span, s) {
+    return s.append('form')
+      .attr('hidden', true)
+      .on('submit', d => {
+        var e = d3.event;
+        e.preventDefault();
+
+        d.value = new FormData(e.target).toJSON().value;
+        d.original[d.key] = d.value;
+        span.text(d =>  d.value);
+
+        e.target.hidden = true;
+        e.target.previousElementSibling.hidden = false;
+      })
+      .append('input')
+      .attr('name', 'value')
+      .attr('value', d => d.value);
+  }
   var createRedactCell = {
     type: s => {
       var span = spanEmpty(s);
-      s.append('form')
-        .attr('hidden', true)
-        .on('submit', d => {
-          var e = d3.event;
-          e.preventDefault();
-
-          d.value = new FormData(e.target).toJSON().value;
-          d.original[d.key] = d.value;
-          span.text(d =>  d.value);
-
-          e.target.hidden = true;
-          e.target.previousElementSibling.hidden = false;
-        })
-        .append('input')
-        .attr('name', 'value')
-        .attr('list', 'Supplies_type')
-        .attr('value', d => d.value);
+      formAndInput(span, s)
+        .attr('list', 'Supplies_type');
     },
     description: s => {
       var span = spanEmpty(s);
-      s.append('form')
-        .attr('hidden', true)
-        .on('submit', d => {
-          var e = d3.event;
-          e.preventDefault();
-
-          d.value = new FormData(e.target).toJSON().value;
-          d.original[d.key] = d.value;
-          span.text(d =>  d.value);
-
-          e.target.hidden = true;
-          e.target.previousElementSibling.hidden = false;
-        })
-        .append('input')
-        .attr('name', 'value')
-        .attr('value', d => d.value);
+      formAndInput(span, s);
     },
     unit: s => s.append('span')
       .text(d => d.value ? d.value.toString().trim() : '-'),
