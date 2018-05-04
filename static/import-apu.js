@@ -2,17 +2,38 @@
 (() => {
   var data = [];
   var COLUMNS = ['type', 'description', 'unit', 'cost', 'qop'];
+  function spanEmpty(s) {
+    return s.append('span')
+      .text(d => d.value ? d.value.toString().trim() : '-')
+      .on('click', d => {
+        var e = d3.event;
+        e.target.hidden = true;
+        e.target.nextElementSibling.hidden = false;
+      });
+  }
   var createRedactCell = {
-    type: s => s.append('span')
-      .text(d => d.value ? d.value.toString().trim() : '-'),
-    description: s => {
-      var span = s.append('span')
-        .text(d => d.value ? d.value.toString().trim() : '-')
-        .on('click', d => {
+    type: s => {
+      var span = spanEmpty(s);
+      s.append('form')
+        .attr('hidden', true)
+        .on('submit', d => {
           var e = d3.event;
+          e.preventDefault();
+
+          d.value = new FormData(e.target).toJSON().value;
+          d.original[d.key] = d.value;
+          span.text(d =>  d.value);
+
           e.target.hidden = true;
-          e.target.nextElementSibling.hidden = false;
-        });
+          e.target.previousElementSibling.hidden = false;
+        })
+        .append('input')
+        .attr('name', 'value')
+        .attr('list', 'Supplies_type')
+        .attr('value', d => d.value);
+    },
+    description: s => {
+      var span = spanEmpty(s);
       s.append('form')
         .attr('hidden', true)
         .on('submit', d => {
