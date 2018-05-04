@@ -1,16 +1,32 @@
 'use strict';
 (() => {
   var COLUMNS = ['type', 'description', 'unit', 'cost', 'qop'];
+  var renderRedact = {
+    type: s => s.append('span').text(d => d.value),
+    description: s => {
+      s.append('input').attr('value', d => d.value);
+      s.append('span').text(d => d.value);
+    },
+    unit: s => s.append('span').text(d => d.value),
+    cost: s => s.append('span').text(d => d.value),
+    qop: s => s.append('span').text(d => d.value)
+  }
   document.querySelector('#import-apu-close').addEventListener('click', e => {
     e.target.parentElement.style.display = 'none';
   });
   function renderRow(selection) {
     var cols = selection.selectAll('td.col')
-      .data(d => Object.keys(d).map(c => d[c]));
-    cols.text(d => d);
+      .data(d => Object.keys(d).map(c => ({
+        key: c,
+        value: d[c]
+      })));
+    cols.text(d => d.value);
     cols.enter().append('td')
       .classed('col', true)
-      .text(d => d);
+      .each(function(d) {
+        var selection = d3.select(this);
+        renderRedact[d.key](selection);
+      });
     cols.exit().remove();
   }
   document.addEventListener('paste', e => {
@@ -38,9 +54,10 @@
         from: 'importAAUSupplies',
         row: d
       })).forEach(event => {
-        client.emit('data', event);
-        document.querySelector('#import-apu').style.display = 'none';
+        console.log(event);
+        //client.emit('data', event);
       });
+      document.querySelector('#import-apu').style.display = 'none';
     }, { once: true });
   });
 })();
