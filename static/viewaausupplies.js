@@ -440,8 +440,7 @@
     });
     aau.append('button').text('Importar')
       .on('click', d => {
-        document.querySelector('#import-aau-form input[name="AAU"]').value = d.AAU_id;
-        document.querySelector('#import-aau').style.display = '';
+        document.querySelector('import-a-u-supplies').setup(d.AAU_id).show();
       });
 
   }
