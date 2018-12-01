@@ -5,6 +5,9 @@
     <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
     <script src="node_modules/d3/build/d3.min.js"></script>
     <script src="https://rawgit.com/m3co/arca-utiles/master/import-a-u.js"></script>
+    <script src="https://rawgit.com/m3co/arca-utiles/master/utils.js"></script>
+    <script src="https://rawgit.com/m3co/arca-utiles/master/combobox-bike.js"></script>
+    <script src="https://rawgit.com/m3co/arca-utiles/master/selector-projects.js"></script>
     <script src="client.js"></script>
     <link href="tree.css" rel="stylesheet" />
     <style>
@@ -28,6 +31,13 @@
       <option>Transporte</option>
       <option>Subcontrato</option>
     </datalist>
+    <selector-projects></selector-projects>
+    <script>
+      'use strict';
+      window.projects = {
+doselect: document.querySelector('selector-projects').doselect
+      };
+    </script>
     <div style="display: table; width:100%;">
       <ol class="tree" style="display: table-cell; width: 30%;"></ol>
       <div class="blocks" style="display: table-cell; width: 70%;"></div>

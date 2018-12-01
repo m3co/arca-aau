@@ -1,10 +1,11 @@
 'use strict';
 (() => {
 
+  var ProjectId = location.search.match(/\d+$/);
   var Children = Symbol();
   var Ready = Symbol();
   var root = {
-    id_to_concrete: '2', parent_to_concrete: null,
+    id_to_concrete: ProjectId, parent_to_concrete: null,
     description_to_concrete: '', expand: true
   };
   root[Children] = [];
@@ -124,7 +125,7 @@
             query: 'select',
             module: 'fnConcretizeAAU',
             parent: d.id_to_concrete,
-            project: '2'
+            project: ProjectId
           });
         }
       })

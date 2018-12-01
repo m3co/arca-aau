@@ -4,13 +4,16 @@
 
   client.on('connect', () => {
     console.log('connection');
+    var ProjectId = location.search.match(/\d+$/);
 
-    client.emit('data', {
-      query: 'select',
-      module: 'fnConcretizeAAU',
-      parent: '2',
-      project: '2'
-    });
+    if (ProjectId) {
+      client.emit('data', {
+        query: 'select',
+        module: 'fnConcretizeAAU',
+        parent: ProjectId,
+        project: ProjectId
+      });
+    }
 
     client.emit('data', {
       query: 'subscribe',
@@ -25,6 +28,11 @@
     client.emit('data', {
       query: 'subscribe',
       module: 'Supplies'
+    });
+
+    client.emit('data', {
+      query: 'select',
+      module: 'Projects'
     });
   });
 
@@ -49,6 +57,8 @@
         } else {
           console.log('sin procesar fnConcretizeAAU', data);
         }
+      } else if (query == 'select' && data.module == 'Projects') {
+        window.projects.doselect(data.row);
       } else if (data.module == 'viewAAUSupplies') {
         if (query == 'select') {
           viewaausupplies.doselect(data.row);
