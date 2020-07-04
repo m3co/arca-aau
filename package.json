@@ -1,21 +1,14 @@
 {
-  "name": "arca-apu-import",
+  "name": "arca-tree",
   "version": "1.0.0",
-  "description": "La forma más simple de representar un diagrama de Gantt",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "node middleware.js",
-    "static": "http-server -c-1 -p 9002 ./static"
+
   },
-  "author": "Andres Rios <rianby64@gmail.com>",
+  "author": "Anton Novikau",
   "license": "ISC",
   "homepage": "https://github.com/m3co/arca-arbol#readme",
   "dependencies": {
-    "d3": "^4.13.0",
-    "express": "^4.16.3",
-    "http-proxy-middleware": "^0.17.4",
-    "http-server": "^0.10.0",
-    "ini": "^1.3.5",
-    "socket.io-client": "^2.0.4"
+
   }
 }
