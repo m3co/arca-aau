@@ -5,7 +5,7 @@ import TreeView from '@material-ui/lab/TreeView';
 import Description from '@material-ui/icons/Description';
 import Folder from '@material-ui/icons/Folder';
 import TreeItem from '@material-ui/lab/TreeItem';
-import { parseTreeItems } from '../../utils';
+import { parseTreeItems, isKeyWithDash } from '../../utils';
 import { tree } from '../../types';
 
 interface TreeProps {
@@ -25,9 +25,6 @@ const useStyles = makeStyles({
       marginLeft: 8,
       paddingLeft: 8,
     },
-    '& .MuiTreeItem-iconContainer svg:hover': {
-      color: '#61dafb',
-    },
   },
   folder: {
     color: '#999999',
@@ -39,6 +36,12 @@ const useStyles = makeStyles({
     fontSize: 16,
     lineHeight: '16px',
     margin: '5px 5px 0 5px',
+  },
+  labelTitleWithDash: {
+    fontSize: 16,
+    lineHeight: '16px',
+    margin: '5px 5px 0 5px',
+    color: '#999999',
   },
   labelDesc: {
     fontSize: 14,
@@ -59,16 +62,19 @@ const Tree: React.FunctionComponent<TreeProps> = ({
   };
 
   const getTreeItem = (treeItems: tree[]) => treeItems.map((item, i) => {
+    const keyClasses = isKeyWithDash(item.Key)
+      ? classes.labelTitleWithDash
+      : classes.labelTitle;
+
     if (item.items) {
       return (
         <TreeItem
           className={classes.treeItem}
           key={item.Key + String(i)}
           nodeId={item.Key}
-          onLabelClick={onClickTreeItem(item)}
           label={(
             <Fragment>
-              <h2 className={classes.labelTitle}>{`${item.Key}`}</h2>
+              <h2 className={keyClasses}>{`${item.Key}`}</h2>
               <p className={classes.labelDesc}>{ item.Description }</p>
             </Fragment>
           )}
@@ -89,7 +95,7 @@ const Tree: React.FunctionComponent<TreeProps> = ({
         onIconClick={onClickTreeItem(item)}
         label={(
           <Fragment>
-            <h2 className={classes.labelTitle}>{`${item.Key}`}</h2>
+            <h2 className={keyClasses}>{`${item.Key}`}</h2>
             <p className={classes.labelDesc}>{ item.Description }</p>
           </Fragment>
         )}
@@ -104,7 +110,7 @@ const Tree: React.FunctionComponent<TreeProps> = ({
       defaultEndIcon={<Description />}
     >
       {
-        parsedTrees.map(tree => getTreeItem(tree))
+        getTreeItem(parsedTrees)
       }
     </TreeView>
   );

@@ -1,19 +1,15 @@
-import isEqual from 'lodash/isEqual';
 import { State } from 'arca-redux-v4';
 import { tree } from '../types/index';
 
-const isKeyWithDash = (key: string) => key.includes('-');
+export const isKeyWithDash = (key: string) => key.includes('-');
 
-const setItemToParent = (parentList: tree[], item: State['Source']['AAU-Concretize'][0]) => {
-  const itemKey = item.Key.split('.');
-
+const setItemToParent = (parentList: tree[], item: tree) => {
   if (parentList.length) {
-    parentList.every(parent => {
-      const parentKey = parent.Key.split('.');
-      const isSetInTree = item.Key.includes(parent.Key) && parent.Expand;
+    parentList.forEach(parent => {
+      const isSetInTree = item.abstractKey.includes(parent.abstractKey) && parent.Expand;
 
       if (isSetInTree) {
-        if (itemKey.length - parentKey.length === 1) {
+        if (item.abstractParent === parent.abstractKey) {
           parent.items.push({
             ...item,
             ...(item.Expand ? { items: [] } : {}),
@@ -21,10 +17,7 @@ const setItemToParent = (parentList: tree[], item: State['Source']['AAU-Concreti
         } else {
           setItemToParent(parent.items, item);
         }
-        return false;
       }
-
-      return true;
     });
   } else {
     parentList.push({
@@ -34,43 +27,34 @@ const setItemToParent = (parentList: tree[], item: State['Source']['AAU-Concreti
   }
 };
 
-export const parseTreeItems = (items: State['Source']['AAU-Concretize']): tree[][] => items
-  .reduce((filteredItems, item) => {
-    const itemNotExist = !filteredItems.some(filteredItem => isEqual(filteredItem, item));
+const compareKeys = (firstItem: tree, secondItem: tree): number => {
+  if (!firstItem.Parent) return -1;
+  if (!secondItem.Parent) return 1;
 
-    if (itemNotExist) {
-      filteredItems.push(item);
+  const firstKey = firstItem.abstractKey.slice(2).split('.');
+  const secondKey = secondItem.abstractKey.slice(2).split('.');
+  const shorterKey = firstKey.length > secondKey.length ? secondKey : firstKey;
+
+  for (let i = 0; i < shorterKey.length; i += 1) {
+    const diffValue = Number(firstKey[i]) - Number(secondKey[i]);
+
+    if (diffValue !== 0) {
+      return diffValue;
     }
+  }
 
-    return filteredItems;
-  }, [] as State['Source']['AAU-Concretize'])
-  .sort((firstItem, secondItem) => {
-    const firstKey = firstItem.Key.split('.');
-    const secondKey = secondItem.Key.split('.');
+  return firstKey.length - secondKey.length;
+};
 
-    return firstKey.length - secondKey.length;
-  })
-  .reduce((acc, item) => {
-    if (!acc[1].length) {
-      acc[1].push({
-        Key: '-.',
-        Expand: true,
-      });
-    }
+export const parseTreeItems = (items: State['Source']['AAU-Concretize']): tree[] => items
+  .map(item => ({
+    ...item,
+    abstractKey: item.Key ? item.Key.replace(/^[0-9]+/, '-') : null,
+    abstractParent: item.Parent ? item.Parent.replace(/^[0-9]+/, '-') : null,
+  }))
+  .sort(compareKeys)
+  .reduce((list, item) => {
+    setItemToParent(list, item);
 
-    if (isKeyWithDash(item.Key)) {
-      acc[1].push(item);
-    } else {
-      acc[0].push(item);
-    }
-
-    return acc;
-  }, [[], []])
-  .map(
-    tree => tree
-      .reduce((list, item) => {
-        setItemToParent(list, item);
-
-        return list;
-      }, [] as tree[]),
-  );
+    return list;
+  }, [] as tree[]);
