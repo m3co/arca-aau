@@ -2,6 +2,21 @@ import { State } from 'arca-redux-v4';
 import { tree } from '../types/index';
 
 export const isKeyWithDash = (key: string) => key.includes('-');
+export const parseToCurrencyFormat = (value: string) => `$${value.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1.')}`;
+export const removeChars = (value: string) => value.replace(/\D/g, '');
+export const parseToNumber = (value: string) => Number(removeChars(value));
+export const parseToNumberWithDot = (value: string) => value.split('.').map(v => removeChars(v)).join('.').replace(/\.+/, '.');
+
+export const parseCell = (cell: keyof tree, value: string) => {
+  switch (cell) {
+    case 'P':
+      return parseToNumberWithDot(value);
+    case 'Estimated':
+      return parseToNumber(value);
+    default:
+      return value;
+  }
+};
 
 const setItemToParent = (parentList: tree[], item: tree) => {
   if (parentList.length) {
