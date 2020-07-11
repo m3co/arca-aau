@@ -51,7 +51,7 @@ const useStyles = makeStyles({
     color: '#999999',
   },
   description: {
-    padding: '32px 24px',
+    padding: '32px 24px 0',
   },
 });
 
