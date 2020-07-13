@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import toString from 'lodash/toString';
+import { Row, State } from 'arca-redux-v4';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,6 +15,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
+import { socket } from '../../redux/store';
 import { tree } from '../../types';
 import { parseToCurrencyFormat, parseCell } from '../../utils';
 
@@ -53,7 +55,28 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
   };
 
   const createRow = () => {
+    onSubmit('AAU', newItem, true);
+  };
 
+  const onSubmit = (source: keyof State['Source'], itemToSend: tree, isNewRow?: boolean) => {
+    const parsedItem = {
+      ...(isNewRow ? { Concreted: false } : { Concreted: itemToSend.Concreted }),
+      Description: itemToSend.Description,
+      Estimated: itemToSend.Estimated,
+      Expand: itemToSend.Expand,
+      ...(isNewRow ? {} : { Key: itemToSend.Key }),
+      P: Number(itemToSend.P),
+      ...(isNewRow ? { Parent: item.Key } : { Parent: itemToSend.Parent }),
+      Project: itemToSend.Project,
+      Unit: itemToSend.Unit,
+    } as Row;
+
+    if (isNewRow) {
+      socket.insert(source, parsedItem);
+      toggleAddMode();
+    } else {
+      socket.update(source, parsedItem, { Key: itemToSend.Key });
+    }
   };
 
   const handleChange = (cell: keyof tree) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +93,11 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
       ...item,
       [cell]: event.target.checked,
     });
+
+    onSubmit('AAU-Concretize', {
+      ...item,
+      [cell]: event.target.checked,
+    });
   };
 
   const handleChangeNewRow = (cell: keyof tree) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,15 +109,21 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
     });
   };
 
-  const handleChangeCheckboxNewRow = (cell: keyof tree) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewItem({
-      ...newItem,
-      [cell]: event.target.checked,
-    });
+  const onKeyPress = (isNewRow?: boolean) => (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const itemToSubmit = isNewRow ? newItem : item;
+
+    if (event.key === 'Enter') {
+      onSubmit('AAU', itemToSubmit, isNewRow);
+    }
+  };
+
+  const onBlurCell = (isNewRow?: boolean) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (isNewRow) {
+      onSubmit('AAU', item);
+    }
   };
 
   const getField = (col: keyof tree, item: tree, isNewRow?: boolean) => {
-    const handleCheckbox = isNewRow ? handleChangeCheckboxNewRow : handleChangeCheckbox;
     const handleInput = isNewRow ? handleChangeNewRow : handleChange;
 
     switch (col) {
@@ -97,8 +131,9 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
         return (
           <Checkbox
             checked={!!item[col]}
-            onChange={handleCheckbox(col)}
+            {...(isNewRow ? {} : { onChange: handleChangeCheckbox(col) })}
             color='default'
+            disabled={isNewRow}
           />
         );
       case 'Description':
@@ -108,6 +143,8 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
             onChange={handleInput(col)}
             disableUnderline
             placeholder='Description'
+            onKeyPress={onKeyPress(isNewRow)}
+            onBlur={onBlurCell(isNewRow)}
           />
         );
       case 'Unit':
@@ -117,6 +154,8 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
             onChange={handleInput(col)}
             disableUnderline
             placeholder='Unit'
+            onKeyPress={onKeyPress(isNewRow)}
+            onBlur={onBlurCell(isNewRow)}
           />
         );
       case 'Estimated':
@@ -126,6 +165,8 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
             value={item[col] ? parseToCurrencyFormat(toString(item[col])) : ''}
             disableUnderline
             placeholder='$0'
+            onKeyPress={onKeyPress(isNewRow)}
+            onBlur={onBlurCell(isNewRow)}
           />
         );
       case 'P':
@@ -135,6 +176,8 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
             value={toString(item[col])}
             disableUnderline
             placeholder='0.000'
+            onKeyPress={onKeyPress(isNewRow)}
+            onBlur={onBlurCell(isNewRow)}
           />
         );
       default:
