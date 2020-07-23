@@ -2,3 +2,4 @@
 .*.sw*
 config.ini
 package-lock.json
+dist
