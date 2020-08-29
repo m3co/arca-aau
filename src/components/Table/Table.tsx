@@ -66,7 +66,7 @@ const AAUTable: React.FunctionComponent<AAUTableProps> = ({
       Expand: itemToSend.Expand,
       ...(isNewRow ? {} : { Key: itemToSend.Key }),
       P: Number(itemToSend.P),
-      ...(isNewRow ? { Parent: item.Key } : { Parent: itemToSend.Parent }),
+      ...(isNewRow ? { Parent: item.abstractKey } : { Parent: itemToSend.Parent }),
       Project: itemToSend.Project,
       Unit: itemToSend.Unit,
     } as Row;
